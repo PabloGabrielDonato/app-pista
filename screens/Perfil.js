@@ -2,14 +2,16 @@ import React from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Logo from '../components/Logo';
+import AsyncStorage from '@react-native-async-storage/async-storage'; // Asegúrate de importar AsyncStorage
 
 const Perfil = () => {
   const navigation = useNavigation();
 
-  // Función para cerrar sesión y redirigir al login
-  const handleLogout = () => {
-    navigation.navigate('Login');
-  };
+const handleLogout = async () => {
+  await AsyncStorage.removeItem('token'); // Elimina el token del almacenamiento
+  navigation.navigate('Login'); // Redirige a la pantalla de login
+};
+
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>

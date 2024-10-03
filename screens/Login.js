@@ -1,10 +1,28 @@
-import React from 'react';
-import { View, Text, TextInput, Pressable, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TextInput, Pressable, StyleSheet, Alert } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage'; // Importar AsyncStorage
 import Logo from '../components/Logo'; 
 
-export default function Login({ navigation }) { // Recepción de la prop navigation
-  const goToHome = () => {
-    navigation.navigate('Home'); // Navega a la pantalla Register
+export default function Login({ navigation }) {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  // Función para manejar el login
+  const handleLogin = async () => {
+    // Aquí iría la lógica para la autenticación con tu backend (por ejemplo, hacer una llamada a la API)
+
+    // Simulación de autenticación exitosa
+    if (email === 'pablo@ejemplo.com' && password === 'password123') {
+      // Guarda el token en AsyncStorage
+      try {
+        await AsyncStorage.setItem('userToken', 'dummy-auth-token');
+        navigation.navigate('Home'); // Navega a Home después del login
+      } catch (e) {
+        console.log('Error al guardar el token', e);
+      }
+    } else {
+      Alert.alert('Error', 'Correo o contraseña incorrectos');
+    }
   };
 
   const goToRegister = () => {
@@ -27,6 +45,8 @@ export default function Login({ navigation }) { // Recepción de la prop navigat
           style={styles.input} 
           placeholder="Email"
           placeholderTextColor="#000"
+          value={email}
+          onChangeText={setEmail} // Actualiza el valor del email
         />
       </View>
 
@@ -36,6 +56,8 @@ export default function Login({ navigation }) { // Recepción de la prop navigat
           placeholder="Contraseña"
           placeholderTextColor="#000"
           secureTextEntry={true}
+          value={password}
+          onChangeText={setPassword} // Actualiza el valor de la contraseña
         />
       </View>
 
@@ -47,7 +69,7 @@ export default function Login({ navigation }) { // Recepción de la prop navigat
         <View style={[styles.buttonContainer, styles.loginButtonContainer]}>
           <Pressable 
             style={[styles.button, styles.loginButton]} 
-            onPress={goToHome} // Llamamos a handleLogin al presionar el botón
+            onPress={handleLogin} // Cambia la función de login
           >
             <Text style={[styles.buttonLabel, { color: 'black' }]}>Iniciar sesión</Text>
           </Pressable>
