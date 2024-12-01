@@ -1,131 +1,195 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Pressable, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Pressable, StyleSheet, Alert, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 
 export default function Register({ navigation }) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [form, setForm] = useState({
+    name: '',
+    last_name: '',
+    dni: '',
+    address: '',
+    phone: '',
+    birth_date: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  });
 
-  const handleRegister = () => {
-    if (password === confirmPassword) {
-      // Aquí podrías agregar la lógica de registro de usuario
-      console.log("Usuario registrado:", email);
-      navigation.navigate('Login'); // Redirige a la pantalla de Login después del registro
-    } else {
-      alert('Las contraseñas no coinciden');
+  const handleInputChange = (field, value) => {
+    setForm({ ...form, [field]: value });
+  };
+
+  const handleRegister = async () => {
+    if (form.password !== form.confirmPassword) {
+      Alert.alert('Error', 'Las contraseñas no coinciden');
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: form.name,
+          last_name: form.last_name,
+          dni: form.dni,
+          address: form.address,
+          phone: form.phone,
+          birth_date: form.birth_date,
+          email: form.email,
+          password: form.password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        Alert.alert('Éxito', 'Usuario registrado correctamente');
+        navigation.navigate('Login');
+      } else {
+        Alert.alert('Error', data.message || 'Error al registrar usuario');
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Hubo un problema al conectar con el servidor');
     }
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Registro</Text>
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
+      <ScrollView contentContainerStyle={styles.container}>
+        <Text style={styles.title}>Registro</Text>
 
-      <View style={styles.inputContainer}>
+        {/* Nombre */}
+        <TextInput
+          style={styles.input}
+          placeholder="Nombre"
+          placeholderTextColor="#000"
+          value={form.name}
+          onChangeText={(value) => handleInputChange('name', value)}
+        />
+
+        {/* Apellido */}
+        <TextInput
+          style={styles.input}
+          placeholder="Apellido"
+          placeholderTextColor="#000"
+          value={form.last_name}
+          onChangeText={(value) => handleInputChange('last_name', value)}
+        />
+
+        {/* DNI */}
+        <TextInput
+          style={styles.input}
+          placeholder="DNI"
+          placeholderTextColor="#000"
+          value={form.dni}
+          onChangeText={(value) => handleInputChange('dni', value)}
+          keyboardType="numeric"
+        />
+
+        {/* Dirección */}
+        <TextInput
+          style={styles.input}
+          placeholder="Dirección"
+          placeholderTextColor="#000"
+          value={form.address}
+          onChangeText={(value) => handleInputChange('address', value)}
+        />
+
+        {/* Teléfono */}
+        <TextInput
+          style={styles.input}
+          placeholder="Teléfono"
+          placeholderTextColor="#000"
+          value={form.phone}
+          onChangeText={(value) => handleInputChange('phone', value)}
+          keyboardType="phone-pad"
+        />
+
+        {/* Fecha de Nacimiento */}
+        <TextInput
+          style={styles.input}
+          placeholder="Fecha de nacimiento (YYYY-MM-DD)"
+          placeholderTextColor="#000"
+          value={form.birth_date}
+          onChangeText={(value) => handleInputChange('birth_date', value)}
+        />
+
+        {/* Email */}
         <TextInput
           style={styles.input}
           placeholder="Email"
           placeholderTextColor="#000"
-          value={email}
-          onChangeText={setEmail}
+          value={form.email}
+          onChangeText={(value) => handleInputChange('email', value)}
+          keyboardType="email-address"
         />
-      </View>
 
-      <View style={styles.inputContainer}>
+        {/* Contraseña */}
         <TextInput
           style={styles.input}
           placeholder="Contraseña"
           placeholderTextColor="#000"
           secureTextEntry={true}
-          value={password}
-          onChangeText={setPassword}
+          value={form.password}
+          onChangeText={(value) => handleInputChange('password', value)}
         />
-      </View>
 
-      <View style={styles.inputContainer}>
+        {/* Confirmar Contraseña */}
         <TextInput
           style={styles.input}
           placeholder="Confirmar Contraseña"
           placeholderTextColor="#000"
           secureTextEntry={true}
-          value={confirmPassword}
-          onChangeText={setConfirmPassword}
+          value={form.confirmPassword}
+          onChangeText={(value) => handleInputChange('confirmPassword', value)}
         />
-      </View>
 
-      <View style={styles.buttonContainer}>
-        <Pressable
-          style={styles.button}
-          onPress={handleRegister}
-        >
+        <Pressable style={styles.button} onPress={handleRegister}>
           <Text style={styles.buttonLabel}>Registrarse</Text>
         </Pressable>
-      </View>
-
-      <View style={styles.loginLinkContainer}>
-        <Text style={styles.loginText}>
-          ¿Ya tienes cuenta?{' '}
-          <Pressable onPress={() => navigation.navigate('Login')}>
-            <Text style={styles.loginLink}>Inicia sesión</Text>
-          </Pressable>
-        </Text>
-      </View>
-    </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    flexGrow: 1,
     padding: 20,
+    justifyContent: 'center',
+    backgroundColor: '#f9f9f9',
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
-  },
-  inputContainer: {
-    width: 320,
-    height: 68,
-    marginVertical: 10,
-    borderColor: '#3BA0C6',
-    borderWidth: 2,
-    borderRadius: 10,
-    justifyContent: 'center',
+    textAlign: 'center',
   },
   input: {
+    height: 50,
+    borderColor: '#3BA0C6',
+    borderWidth: 2,
+    borderRadius: 10,
     paddingHorizontal: 10,
+    marginBottom: 15,
     fontSize: 16,
-    color: '#000',
-    width: '100%',
-    height: '100%',
-  },
-  buttonContainer: {
-    width: 160,
-    marginTop: 20,
+    backgroundColor: '#fff',
   },
   button: {
+    height: 50,
+    backgroundColor: '#3BA0C6',
     borderRadius: 10,
-    borderWidth: 2,
-    borderColor: '#3BA0C6',
-    alignItems: 'center',
     justifyContent: 'center',
-    height: 60,
+    alignItems: 'center',
   },
   buttonLabel: {
-    fontSize: 16,
+    color: '#fff',
     fontWeight: 'bold',
-    color: 'black',
-  },
-  loginLinkContainer: {
-    marginTop: 20,
-  },
-  loginText: {
     fontSize: 16,
-  },
-  loginLink: {
-    color: '#3BA0C6',
-    fontWeight: 'bold',
   },
 });

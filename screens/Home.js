@@ -9,6 +9,26 @@ export default function Home() {
   const [modalVisible, setModalVisible] = useState(false); // Estado del modal
   const [name, setName] = useState('');
   const [dni, setDni] = useState('');
+  const [selectedLocation, setSelectedLocation] = useState(null); // Location seleccionada
+  const [locations, setLocations] = useState([]); // Lista de locations
+
+
+  const fetchLocations = async () => {
+    try {
+      const response = await fetch('http://localhost/api/locations');
+      const data = await response.json();
+      setLocations(data); 
+    } catch (error) {
+      console.error('Error al cargar las ubicaciones:', error);
+    }
+  };
+
+ 
+  React.useEffect(() => {
+    fetchLocations().then();
+    console.log(locations);
+  }, []);
+  
   
   const { height: screenHeight } = useWindowDimensions();
 
@@ -45,7 +65,32 @@ export default function Home() {
   const days = generateDays();
 
   return (
+    
     <ScrollView contentContainerStyle={styles.container}>
+
+      {/* Carrusel de locaciones */}
+
+      {/*<ScrollView horizontal showsHorizontalScrollIndicator={false}>*/}
+        <View style={styles.imageContainer}>
+          <Image source={require('../assets/images/skating_rink.jpg')} style={styles.image} />
+          <View style={styles.infoContainer}>
+            <View>
+              <View style={styles.sportContainer}>
+                <MaterialCommunityIcons name="roller-skate" size={20} color="#A0A0A0" />
+                <Text style={styles.sport}>Patín artístico</Text>
+              </View>
+              <Text style={styles.location}>Pista de entrenamiento profesional</Text>
+            </View>
+            <View>
+              <Text style={styles.price}>$20.000</Text>
+              <View style={styles.locationContainer}>
+                <Ionicons name="location-outline" size={16} color="#A0A0A0" />
+                <Text style={styles.place}>Parque Roca</Text>
+              </View>
+            </View>
+          </View>
+        </View>
+      {/*</ScrollView>  */}
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={[styles.daysContainer, { height: screenHeight * 0.2 }]}>
         {days.map((dayData) => (
           <TouchableOpacity
@@ -61,29 +106,12 @@ export default function Home() {
                 {dayData.day} {dayData.monthName}
               </Text>
             </View>
+            
           </TouchableOpacity>
         ))}
       </ScrollView>
 
-      <View style={styles.imageContainer}>
-        <Image source={require('../assets/images/skating_rink.jpg')} style={styles.image} />
-        <View style={styles.infoContainer}>
-          <View>
-            <View style={styles.sportContainer}>
-              <MaterialCommunityIcons name="roller-skate" size={20} color="#A0A0A0" />
-              <Text style={styles.sport}>Patín artístico</Text>
-            </View>
-            <Text style={styles.location}>Pista de entrenamiento profesional</Text>
-          </View>
-          <View>
-            <Text style={styles.price}>$20.000</Text>
-            <View style={styles.locationContainer}>
-              <Ionicons name="location-outline" size={16} color="#A0A0A0" />
-              <Text style={styles.place}>Parque Roca</Text>
-            </View>
-          </View>
-        </View>
-      </View>
+
       
       <Text style={styles.scheduleNote}>Tenga en cuenta que los turnos son de 60 minutos.</Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.hourScrollContainer}>
@@ -422,4 +450,5 @@ modalContent: {
     width: '100%',
     marginBottom:40 // Ocupa todo el ancho disponible
   },
+  
 });
