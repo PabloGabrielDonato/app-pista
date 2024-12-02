@@ -37,7 +37,8 @@
     "react-native-screens": "~4.1.0",
     "react-native-vector-icons": "^10.2.0",
     "react-native-web": "~0.19.10",
-    "recyclerlistview": "^4.2.1"
+    "recyclerlistview": "^4.2.1",
+    "zustand": "^5.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

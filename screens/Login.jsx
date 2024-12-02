@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { View, Text, TextInput, Pressable, StyleSheet, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Importar AsyncStorage
 import Logo from '../components/Logo'; 
@@ -6,6 +6,28 @@ import Logo from '../components/Logo';
 export default function Login({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const [data, setData] = useState();
+
+  useEffect(()=> {
+    const loadData = async() =>{
+      const response = await fetch('http://localhost/api/locations', {
+        headers:
+        {
+          "Content-Type": "application/json",
+        }
+      });
+      const sata = await response.json();
+      console.log(response.body)
+      setData(sata);
+      console.log(sata)
+    }
+    loadData().catch((error) => (
+      console.error('Error al cargar los datos:', error)
+    ))
+
+  },[])
+
 
   // Función para manejar el login
   const handleLogin = async () => {

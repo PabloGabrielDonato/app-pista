@@ -9,6 +9,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Login from './screens/Login';
 import Navbar from './components/Navbar'; 
 import Register from './screens/Register';
+import useLocationStore from './store/location.store';
 
 const Stack = createStackNavigator();
 
@@ -26,11 +27,11 @@ const linking = {
 
 export default function App() {
   const [isSplashVisible, setSplashVisible] = useState(true);
-
+  const {loadLocations} = useLocationStore()
   useEffect(() => {
     // Mantener la pantalla de splash visible mientras la animación carga
     SplashScreen.preventAutoHideAsync();
-
+    loadLocations().catch(error => console.error(error))
     // Simular el tiempo de carga o duración de la animación
     setTimeout(() => {
       setSplashVisible(false);
