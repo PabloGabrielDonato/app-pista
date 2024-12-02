@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView, useWindowDimensions, Modal, TextInput } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -12,7 +12,7 @@ export default function Home() {
   const [selectedLocation, setSelectedLocation] = useState(null); // Location seleccionada
   const [locations, setLocations] = useState([]); // Lista de locations
 
-
+  
   const fetchLocations = async () => {
     try {
       const response = await fetch('http://localhost/api/locations');
