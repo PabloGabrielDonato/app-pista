@@ -22,38 +22,35 @@ export default function Register({ navigation }) {
     birth_date: '',
     email: '',
     password: '',
-    confirmPassword: '',
+    password_confirmation: '',
   });
 
-  const register = useUserStore((state) => state.register); // Accede al método de registro del store
+  const { register } = useUserStore(); // Accede al método de registro del store
 
   const handleInputChange = (field, value) => {
     setForm({ ...form, [field]: value });
   };
 
   const handleRegister = async () => {
-    if (form.password !== form.confirmPassword) {
+    if (form.password !== form.password_confirmation) {
       Alert.alert('Error', 'Las contraseñas no coinciden');
       return;
     }
 
-    const { success, message } = await register({
+    console.log(form)
+     await register({
       name: form.name,
       last_name: form.last_name,
-      dni: form.dni,
-      address: form.address,
-      phone: form.phone,
-      birth_date: form.birth_date,
+      //dni: form.dni,
+      //address: form.address,
+      //phone: form.phone,
+      //birth_date: form.birth_date,
       email: form.email,
       password: form.password,
+      password_confirmation: form.password_confirmation
     });
 
-    if (success) {
-      Alert.alert('Éxito', 'Usuario registrado correctamente');
-      navigation.navigate('Login');
-    } else {
-      Alert.alert('Error', message);
-    }
+    
   };
 
   return (
@@ -137,8 +134,8 @@ export default function Register({ navigation }) {
           placeholder="Confirmar Contraseña"
           placeholderTextColor="#000"
           secureTextEntry={true}
-          value={form.confirmPassword}
-          onChangeText={(value) => handleInputChange('confirmPassword', value)}
+          value={form.password_confirmation}
+          onChangeText={(value) => handleInputChange('password_confirmation', value)}
         />
 
         <Pressable style={styles.button} onPress={handleRegister}>
