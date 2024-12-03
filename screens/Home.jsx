@@ -6,13 +6,12 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 export default function Home() {
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedHour, setSelectedHour] = useState(null);
-  const [modalVisible, setModalVisible] = useState(false); // Estado del modal
+  const [modalVisible, setModalVisible] = useState(false); 
   const [name, setName] = useState('');
   const [dni, setDni] = useState('');
-  const [selectedLocation, setSelectedLocation] = useState(null); // Location seleccionada
-  const [locations, setLocations] = useState([]); // Lista de locations
+  const [selectedLocation, setSelectedLocation] = useState(null); 
+  const [locations, setLocations] = useState([]); 
 
-  
   const fetchLocations = async () => {
     try {
       const response = await fetch('http://localhost/api/locations');
@@ -69,28 +68,30 @@ export default function Home() {
     <ScrollView contentContainerStyle={styles.container}>
 
       {/* Carrusel de locaciones */}
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.imageCarousel}>
+        {locations.map((location) => (
+          <TouchableOpacity key={location.id} style={styles.imageContainer} onPress={() => setSelectedLocation(location)}>
+            {/* Imagen de la locación */}
+            <Image source={{ uri: location.image || 'imagen' }} style={styles.image} />
+            
+            {/* Información de la locación */}
+            <View style={styles.infoContainer}>
+              <View>
+                <Text style={styles.location}>{location.name || 'Pista de entrenamiento profesional'}</Text>
+                <Text style={styles.pabellon}>{location.pavilion || 'Pabellon Europa'}</Text>
+                <Text style={styles.description}>{location.description || 'Sin descripción disponible'}</Text>
+              </View>
+              <View>
+                <View style={styles.locationContainer}>
+                  <Ionicons name="location-outline" size={16} color="#A0A0A0" />
+                  <Text style={styles.place}>{location.address || 'Ubicación no especificada'}</Text>
+                </View>
+              </View>
+            </View>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
 
-      {/*<ScrollView horizontal showsHorizontalScrollIndicator={false}>*/}
-        <View style={styles.imageContainer}>
-          <Image source={require('../assets/images/skating_rink.jpg')} style={styles.image} />
-          <View style={styles.infoContainer}>
-            <View>
-              <View style={styles.sportContainer}>
-                <MaterialCommunityIcons name="roller-skate" size={20} color="#A0A0A0" />
-                <Text style={styles.sport}>Patín artístico</Text>
-              </View>
-              <Text style={styles.location}>Pista de entrenamiento profesional</Text>
-            </View>
-            <View>
-              <Text style={styles.price}>$20.000</Text>
-              <View style={styles.locationContainer}>
-                <Ionicons name="location-outline" size={16} color="#A0A0A0" />
-                <Text style={styles.place}>Parque Roca</Text>
-              </View>
-            </View>
-          </View>
-        </View>
-      {/*</ScrollView>  */}
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={[styles.daysContainer, { height: screenHeight * 0.2 }]}>
         {days.map((dayData) => (
           <TouchableOpacity
@@ -215,6 +216,9 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: '#F0F4F8',
   },
+
+  //dias
+
   daysContainer: {
     marginBottom: '5%',
     maxHeight: '10%',
@@ -246,48 +250,80 @@ const styles = StyleSheet.create({
     color: '#A0A0A0',
     marginTop: 5,
   },
+
+  //locaciones
+
+  imageCarousel: {
+    paddingHorizontal: 10,
+    marginVertical: 15,
+  },
   imageContainer: {
-    marginBottom: 20,
+    marginRight: 15,
+    borderRadius: 10,
+    overflow: 'hidden',
+    backgroundColor: '#fff',
+    width: 400, // Ajusta el ancho según necesites
+    elevation: 2, // Sombra para Android
+    shadowColor: '#000', // Sombra para iOS
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
   },
   image: {
     width: '100%',
-    height: 200,
-    borderRadius: 10,
+    height: 150,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
   },
   infoContainer: {
+    padding: 10,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'flex-start',
+  },
+  sportContainer: {
+    flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 10,
+    marginBottom: 5,
   },
   sport: {
-    marginBottom: 5,
-    fontWeight: 'bold',
-    fontSize: 18,
+    fontSize: 14,
+    color: '#A0A0A0',
+    marginLeft: 5,
   },
   location: {
-    color: '#A0A0A0',
-    fontSize: 14,
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  description: {
+    fontSize: 12,
+    color: '#777',
+    marginTop: 5,
+  },
+
+  pabellon: {
+    fontSize: 12,
+    color: '#777',
   },
   price: {
-    marginBottom: 5,
+    fontSize: 16,
     fontWeight: 'bold',
-    fontSize: 18,
+    color: '#333',
+    textAlign: 'right',
   },
   locationContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  sportContainer: {
-    marginBottom: 5,
-    flexDirection: 'row',
-    alignItems: 'center',
+    marginTop: 5,
   },
   place: {
-    color: '#A0A0A0',
     fontSize: 14,
-    marginLeft: 5,
+
   },
+
+
+  
   scheduleNote: {
     textAlign: 'center',
     color: '#A0A0A0',

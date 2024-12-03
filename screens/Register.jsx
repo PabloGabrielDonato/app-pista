@@ -1,5 +1,16 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Pressable, StyleSheet, Alert, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
+import { 
+  View, 
+  Text, 
+  TextInput, 
+  Pressable, 
+  StyleSheet, 
+  Alert, 
+  ScrollView, 
+  KeyboardAvoidingView, 
+  Platform 
+} from 'react-native';
+import useUserStore from '../store/user.store.js'; // Importa el store
 
 export default function Register({ navigation }) {
   const [form, setForm] = useState({
@@ -14,6 +25,8 @@ export default function Register({ navigation }) {
     confirmPassword: '',
   });
 
+  const register = useUserStore((state) => state.register); // Accede al método de registro del store
+
   const handleInputChange = (field, value) => {
     setForm({ ...form, [field]: value });
   };
@@ -24,34 +37,22 @@ export default function Register({ navigation }) {
       return;
     }
 
-    try {
-      const response = await fetch('http://localhost/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: form.name,
-          last_name: form.last_name,
-          dni: form.dni,
-          address: form.address,
-          phone: form.phone,
-          birth_date: form.birth_date,
-          email: form.email,
-          password: form.password,
-        }),
-      });
+    const { success, message } = await register({
+      name: form.name,
+      last_name: form.last_name,
+      dni: form.dni,
+      address: form.address,
+      phone: form.phone,
+      birth_date: form.birth_date,
+      email: form.email,
+      password: form.password,
+    });
 
-      const data = await response.json();
-
-      if (response.ok) {
-        Alert.alert('Éxito', 'Usuario registrado correctamente');
-        navigation.navigate('Login');
-      } else {
-        Alert.alert('Error', data.message || 'Error al registrar usuario');
-      }
-    } catch (error) {
-      Alert.alert('Error', 'Hubo un problema al conectar con el servidor');
+    if (success) {
+      Alert.alert('Éxito', 'Usuario registrado correctamente');
+      navigation.navigate('Login');
+    } else {
+      Alert.alert('Error', message);
     }
   };
 
@@ -63,7 +64,6 @@ export default function Register({ navigation }) {
       <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.title}>Registro</Text>
 
-        {/* Nombre */}
         <TextInput
           style={styles.input}
           placeholder="Nombre"
@@ -72,7 +72,6 @@ export default function Register({ navigation }) {
           onChangeText={(value) => handleInputChange('name', value)}
         />
 
-        {/* Apellido */}
         <TextInput
           style={styles.input}
           placeholder="Apellido"
@@ -81,7 +80,6 @@ export default function Register({ navigation }) {
           onChangeText={(value) => handleInputChange('last_name', value)}
         />
 
-        {/* DNI */}
         <TextInput
           style={styles.input}
           placeholder="DNI"
@@ -91,7 +89,6 @@ export default function Register({ navigation }) {
           keyboardType="numeric"
         />
 
-        {/* Dirección */}
         <TextInput
           style={styles.input}
           placeholder="Dirección"
@@ -100,7 +97,6 @@ export default function Register({ navigation }) {
           onChangeText={(value) => handleInputChange('address', value)}
         />
 
-        {/* Teléfono */}
         <TextInput
           style={styles.input}
           placeholder="Teléfono"
@@ -110,7 +106,6 @@ export default function Register({ navigation }) {
           keyboardType="phone-pad"
         />
 
-        {/* Fecha de Nacimiento */}
         <TextInput
           style={styles.input}
           placeholder="Fecha de nacimiento (YYYY-MM-DD)"
@@ -119,7 +114,6 @@ export default function Register({ navigation }) {
           onChangeText={(value) => handleInputChange('birth_date', value)}
         />
 
-        {/* Email */}
         <TextInput
           style={styles.input}
           placeholder="Email"
@@ -129,7 +123,6 @@ export default function Register({ navigation }) {
           keyboardType="email-address"
         />
 
-        {/* Contraseña */}
         <TextInput
           style={styles.input}
           placeholder="Contraseña"
@@ -139,7 +132,6 @@ export default function Register({ navigation }) {
           onChangeText={(value) => handleInputChange('password', value)}
         />
 
-        {/* Confirmar Contraseña */}
         <TextInput
           style={styles.input}
           placeholder="Confirmar Contraseña"
