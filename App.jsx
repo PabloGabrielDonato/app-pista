@@ -5,11 +5,14 @@ import * as SplashScreen from 'expo-splash-screen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
+
 // Componentes
 import Login from './screens/Login';
 import Navbar from './components/Navbar'; 
 import Register from './screens/Register';
 import useLocationStore from './store/location.store';
+
+const cors = require('cors');
 
 const Stack = createStackNavigator();
 
