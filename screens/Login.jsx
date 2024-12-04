@@ -3,41 +3,22 @@ import { View, Text, TextInput, Pressable, StyleSheet, Alert } from 'react-nativ
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Importar AsyncStorage
 import Logo from '../components/Logo'; 
 import e from 'cors';
+import useUserStore from '../store/user.store.js';
 
 export default function Login({ navigation }) {
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const { login } = useUserStore(); 
 
-  const [data, setData] = useState();
 
-  useEffect(()=> {
-    const loadData = async() =>{
-      const response = await fetch('http://localhost/api/locations', {
-        headers:
-        {
-          "Content-Type": "application/json",
-        }
-      });
-      const sata = await response.json();
-      console.log(response.body)
-      setData(sata);
-      console.log(sata)
-    }
-    loadData().catch((error) => (
-      console.error('Error al cargar los datos:', error)
-    ))
-
-  },[])
 
 
   // Función para manejar el login
   const handleLogin = async () => {
-    // Aquí iría la lógica para la autenticación con tu backend (por ejemplo, hacer una llamada a la API)
-
     // Simulación de autenticación exitosa
-    if (email != '' ||  password != '') alert('Falta completar el formulario')
+    if (email === '' ||  password === '') alert('Falta completar el formulario')
 
       try {
         await login(email, password);
@@ -46,11 +27,11 @@ export default function Login({ navigation }) {
           console.log('Error al guardar el token', e);
         }
       } 
+
+    const goToRegister = () => {
+      navigation.navigate('Register'); // Navega a la pantalla Register
     };
 
-  const goToRegister = () => {
-    navigation.navigate('Register'); // Navega a la pantalla Register
-  };
 
   return (
     <View style={styles.container}>
@@ -100,7 +81,7 @@ export default function Login({ navigation }) {
       </View>
     </View>
   );
-
+}
 
 const styles = StyleSheet.create({
   container: {

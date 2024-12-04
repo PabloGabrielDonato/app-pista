@@ -11,27 +11,22 @@ import Login from './screens/Login';
 import Navbar from './components/Navbar'; 
 import Register from './screens/Register';
 import useLocationStore from './store/location.store';
+import useUserStore from './store/user.store';
 
 const cors = require('cors');
 
 const Stack = createStackNavigator();
 
 // Configuración del deep linking
-const linking = {
-  prefixes: ['http://localhost:19006'],
-  config: {
-    screens: {
-      Login: '',
-      Home: 'home',
-      Register: 'register',
-    },
-  },
-};
+
 
 export default function App() {
   const [isSplashVisible, setSplashVisible] = useState(true);
   const {loadLocations} = useLocationStore()
+  const {token} = useUserStore()
+
   useEffect(() => {
+
     // Mantener la pantalla de splash visible mientras la animación carga
     SplashScreen.preventAutoHideAsync();
     loadLocations().catch(error => console.error(error))
@@ -42,29 +37,28 @@ export default function App() {
     }, 3000); // Puedes ajustar el tiempo según la duración de tu animación
   }, []);
 
-  if (isSplashVisible) {
-    return (
-      <View style={styles.container}>
-        <LottieView
-          source={require('./assets/Animation - 1728064715295.json')}// Ruta de la animación Lottie
-          autoPlay
-          loop={false} // Si no quieres que la animación se repita
-          onAnimationFinish={() => setSplashVisible(false)} // Ocultar splash cuando termine la animación
-        />
-      </View>
-    );
-  }
-
-  // Navegación principal una vez que el splash desaparece
-  return (
-    <NavigationContainer linking={linking}>
+  if (token !== null) {
+    return(
+      <NavigationContainer >
+      <Stack.Navigator initialRouteName="Login">
+        <Stack.Screen name="Home" component={Navbar} options={{ headerShown: false }} />
+      </Stack.Navigator>
+    </NavigationContainer>
+    )
+  } else {
+    return(
+      <NavigationContainer>
       <Stack.Navigator initialRouteName="Login">
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Register" component={Register} />
         <Stack.Screen name="Home" component={Navbar} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>
-  );
+    )
+  }
+
+  // Navegación principal una vez que el splash desaparece
+
 }
 
 const styles = StyleSheet.create({

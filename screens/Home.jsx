@@ -12,6 +12,27 @@ export default function Home() {
   const [selectedLocation, setSelectedLocation] = useState(null); 
   const [locations, setLocations] = useState([]); 
 
+  const [data, setData] = useState();
+
+  useEffect(()=> {
+    const loadData = async() =>{
+      const response = await fetch('http://localhost/api/locations', {
+        headers:
+        {
+          "Content-Type": "application/json",
+        }
+      });
+      const sata = await response.json();
+      console.log(response.body)
+      setData(sata);
+      console.log(sata)
+    }
+    loadData().catch((error) => (
+      console.error('Error al cargar los datos:', error)
+    ))
+
+  },[])
+
   const fetchLocations = async () => {
     try {
       const response = await fetch('http://localhost/api/locations');

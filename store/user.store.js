@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { combine, persist } from 'zustand/middleware';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const useUserStore = create(
@@ -10,8 +10,8 @@ const useUserStore = create(
         user: null,
         token: null,
       },
-      (set) => ({
-        isAuth: () => !!set.user,
+      (set, get) => ({
+        isAuthenticated: () => !!set.user,
         register: async (userData) => {
           try {
             const response = await fetch('http://localhost/api/auth/register', {
@@ -55,7 +55,33 @@ const useUserStore = create(
           } catch (error) {
             return { success: false, message: 'Hubo un problema al conectar con el servidor' };
           };
-        }
+        },
+        logout: async () => {
+          const { token } = get();
+        
+          try {
+            const response = await fetch('http://localhost/api/auth/logout', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+              },
+            });
+        
+            if (response.status >= 200) {
+              set({ user: null, token: null });
+              await AsyncStorage.removeItem('user-storage'); // Limpia el almacenamiento persistente
+
+              console.log('Usuario deslogeado');
+              return { success: true };
+            } else {
+              return { success: false, message: data.message || 'Error al deslogear usuario' };
+            }
+          } catch (error) {
+            return { success: false, message: 'Hubo un problema al conectar con el servidor' };
+          }
+        },
+        
       })
     ),
     {
