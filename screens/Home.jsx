@@ -1,407 +1,179 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView, useWindowDimensions, Modal, TextInput } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import LocationCarousel from '../components/LocationCarousel';
+import useLocationStore from '../store/location.store';
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+  Modal,
+  TextInput,
+} from 'react-native';
+import DatePicker from '../components/DatePicker';
+import HourPicker from '../components/HourPicker';
+import useUserStore from '../store/user.store';
+//import { Button } from 'react-native-ui-lib';
 
 export default function Home() {
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedHour, setSelectedHour] = useState(null);
-  const [modalVisible, setModalVisible] = useState(false); 
-  const [name, setName] = useState('');
-  const [dni, setDni] = useState('');
-  const [selectedLocation, setSelectedLocation] = useState(null); 
-  const [locations, setLocations] = useState([]); 
+  const [modalVisible, setModalVisible] = useState(false);
+  
+  const { loadLocations, locations } = useLocationStore();
 
-  const [data, setData] = useState();
-
-  useEffect(()=> {
-    const loadData = async() =>{
-      const response = await fetch('http://localhost/api/locations', {
-        headers:
-        {
-          "Content-Type": "application/json",
-        }
-      });
-      const sata = await response.json();
-      console.log(response.body)
-      setData(sata);
-      console.log(sata)
-    }
-    loadData().catch((error) => (
-      console.error('Error al cargar los datos:', error)
-    ))
-
-  },[])
-
-  const fetchLocations = async () => {
-    try {
-      const response = await fetch('http://localhost/api/locations');
-      const data = await response.json();
-      setLocations(data); 
-    } catch (error) {
-      console.error('Error al cargar las ubicaciones:', error);
-    }
-  };
-
- 
-  React.useEffect(() => {
-    fetchLocations().then();
-    console.log(locations);
+  useEffect(() => {
+    loadLocations().catch();
   }, []);
-  
-  
-  const { height: screenHeight } = useWindowDimensions();
-
-  const hours = ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00"];
-
-  const onDayPress = (day) => {
-    setSelectedDate(day.dateString);
-  };
-
-  const handleHourSelect = (hour) => {
-    setSelectedHour(hour);
-  };
-
-  const generateDays = () => {
-    const today = new Date();
-    const days = [];
-    for (let i = 0; i < 15; i++) {
-      const date = new Date(today);
-      date.setDate(today.getDate() + i);
-      const day = date.getDate();
-      const dayString = day < 10 ? `0${day}` : day.toString();
-      const dayName = date.toLocaleString('es-AR', { weekday: 'short' });
-      const monthName = date.toLocaleString('es-AR', { month: 'short' });
-      days.push({
-        day: dayString,
-        dayName,
-        monthName,
-        dateString: date.toISOString().split('T')[0]
-      });
-    }
-    return days;
-  };
-
-  const days = generateDays();
 
   return (
-    
     <ScrollView contentContainerStyle={styles.container}>
-
       {/* Carrusel de locaciones */}
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.imageCarousel}>
-        {locations.map((location) => (
-          <TouchableOpacity key={location.id} style={styles.imageContainer} onPress={() => setSelectedLocation(location)}>
-            {/* Imagen de la locación */}
-            <Image source={{ uri: location.image || 'imagen' }} style={styles.image} />
-            
-            {/* Información de la locación */}
-            <View style={styles.infoContainer}>
-              <View>
-                <Text style={styles.location}>{location.name || 'Pista de entrenamiento profesional'}</Text>
-                <Text style={styles.pabellon}>{location.pavilion || 'Pabellon Europa'}</Text>
-                <Text style={styles.description}>{location.description || 'Sin descripción disponible'}</Text>
-              </View>
-              <View>
-                <View style={styles.locationContainer}>
-                  <Ionicons name="location-outline" size={16} color="#A0A0A0" />
-                  <Text style={styles.place}>{location.address || 'Ubicación no especificada'}</Text>
-                </View>
-              </View>
-            </View>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
-
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={[styles.daysContainer, { height: screenHeight * 0.2 }]}>
-        {days.map((dayData) => (
-          <TouchableOpacity
-            key={dayData.dateString}
-            style={[styles.dayButton, selectedDate === dayData.dateString && styles.selectedDayButton]}
-            onPress={() => onDayPress(dayData)}
-          >
-            <View style={styles.dayTextContainer}>
-              <Text style={[styles.dayText, selectedDate === dayData.dateString && styles.selectedDayText]}>
-                {dayData.dayName}
-              </Text>
-              <Text style={[styles.dayName, selectedDate === dayData.dateString && styles.selectedDayText]}>
-                {dayData.day} {dayData.monthName}
-              </Text>
-            </View>
-            
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
-
-
-      
-      <Text style={styles.scheduleNote}>Tenga en cuenta que los turnos son de 60 minutos.</Text>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.hourScrollContainer}>
-        <View style={styles.hourContainer}>
-          {hours.map((hour) => (
-            <TouchableOpacity
-              key={hour}
-              style={[styles.hourButton, selectedHour === hour && styles.selectedHourButton]}
-              onPress={() => handleHourSelect(hour)}
-            >
-              <Text style={selectedHour === hour ? styles.selectedHourText : styles.hourText}>{hour}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-      </ScrollView>
+      <LocationCarousel locations={locations} />
+      <DatePicker setSelectedDate={setSelectedDate} selectedDate={selectedDate} />
+      <HourPicker selectedHour={selectedHour} setSelectedHour={setSelectedHour} />
 
       {/* Botón de Reservar */}
-      <TouchableOpacity style={styles.reserveButton} onPress={() => setModalVisible(true)}>
+      <TouchableOpacity
+        style={styles.reserveButton}
+        onPress={() => setModalVisible(true)}
+      >
         <Text style={styles.reserveButtonText}>Reservar</Text>
       </TouchableOpacity>
 
       {/* Modal de Reserva */}
-      <Modal
-      animationType="slide"
-      transparent={true}
-      visible={modalVisible}
-      onRequestClose={() => setModalVisible(false)}
-    >
-      <View style={styles.modalContainer}>
-        <ScrollView style={styles.modalContent}>
-          <Text style={styles.modalTitle}>Confirmar reserva</Text>
-          <Text style={styles.subTitle}>¡Ya casi terminamos!</Text>
-          <Text style={styles.text}>
-            Para completar tu reserva, termina de completar los siguientes datos
-          </Text>
-          <Image
-            source={require('../assets/images/skating_rink.jpg')}  // Coloca la URL o path local de la imagen aquí
-            style={styles.image}
-          />
-          <Text style={styles.text}>Pista de entrenamiento profesional</Text>
-          <Text style={styles.text}>Parque Roca</Text>
-
-          {/* Detalles de la reserva */}
-          <View style={styles.card}>
-            <Text style={styles.cardText}>Fecha MAR. 1/10/24</Text>
-            <Text style={styles.cardText}>Turno 13:00 - 14:00</Text>
-            <Text style={styles.cardText}>Pista profesional</Text>
-          </View>
-
-          {/* Formulario de datos de reserva */}
-          <Text style={styles.formTitle}>Si usted tiene una licencia CAP, al indicar su número de DNI se le aplicará un descuento</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Nombre completo"
-            placeholderTextColor="#000000"
-            value={name}
-            onChangeText={setName}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="DNI"
-            placeholderTextColor="#000000"
-            keyboardType="numeric"
-            value={dni}
-            onChangeText={setDni}
-          />
-          <TouchableOpacity style={styles.addParticipantButton}>
-            <Text style={styles.addParticipantText}>Añadir participante</Text>
-          </TouchableOpacity>
-
-          {/* Detalles de pago */}
-          <View style={styles.paymentCard}>
-            <Text style={styles.paymentTitle}>Pago</Text>
-            <Text style={styles.paymentText}>Total 20.000</Text>
-            <TextInput style={styles.input} placeholder="Nombre del titular" placeholderTextColor="#000000" />
-            <TextInput style={styles.input} placeholder="DNI del titular" placeholderTextColor="#000000" />
-            <TextInput style={styles.input} placeholder="Número de tarjeta" placeholderTextColor="#000000" />
-            <TextInput style={styles.input} placeholder="Fecha vencimiento" placeholderTextColor="#000000" />
-            <TextInput style={styles.input} placeholder="CVV" placeholderTextColor="#000000" />
-          </View>
-
-          <View style={styles.buttonsContainer}>
-            <TouchableOpacity style={styles.confirmButton} onPress={() => setModalVisible(false)}>
-              <Text style={styles.confirmButtonText}>Pagar y Reservar</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(false)}>
-              <Text style={styles.closeButtonText}>Cancelar</Text>
-            </TouchableOpacity>
-          </View>
-        </ScrollView>
-      </View>
-    </Modal>
+      <FormModal 
+        setModalVisible={setModalVisible} 
+        modalVisible={modalVisible} 
+        selectedDate={selectedDate}
+        selectedHour={selectedHour}
+        />
     </ScrollView>
   );
+}
+
+const FormModal = ({ setModalVisible, modalVisible, selectedDate, selectedHour }) => {
+  const [peopleCount, setPeopleCount] = useState(1);
+  const { currentLocation } = useLocationStore();
+  const { user } = useUserStore();
+
+  const handleOnSubmit = () => {
+    alert('Formulario enviado');
+    setModalVisible(false);
+  }
+
+
+  return (
+  <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <ScrollView style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Confirmar reserva</Text>
+            <Text style={styles.subTitle}>¡Ya casi terminamos!</Text>
+            <Text style={styles.text}>
+              Para completar tu reserva, termina de completar los siguientes datos
+            </Text>
+            <Image
+              source={require('../assets/images/skating_rink.jpg')}
+              style={styles.image}
+            />
+            <Text style={styles.text}>Pista de entrenamiento profesional</Text>
+            <Text style={styles.text}>Parque Roca</Text>
+
+            {/* Detalles de la reserva */}
+            <View style={styles.columnContainer}>
+              <View style={styles.card}>
+                <Text style={styles.cardText}>Fecha MAR. 1/10/24</Text>
+                <Text style={styles.cardText}>Turno 13:00 - 14:00</Text>
+                <Text style={styles.cardText}>Pista profesional</Text>
+              </View>
+              <View style={styles.card}>
+                <Text style={styles.cardText}>Nombre {user?.name}</Text>
+                <Text style={styles.cardText}>DNI {user?.dni}</Text>
+                <Text style={styles.cardText}>Cantidad de personas</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Número de personas"
+                  placeholderTextColor="#000000"
+                  value={`${peopleCount}`}
+                  onChangeText={(text) => setPeopleCount(parseInt(text) || 1)}
+                />
+              </View>
+            </View>
+
+            {/* Formulario de datos de reserva */}
+            <Text style={styles.formTitle}>
+              Si usted tiene una licencia CAP, al indicar su número de DNI se le
+              aplicará un descuento
+            </Text>
+
+            <View style={styles.buttonsContainer}>
+              {/* <Button 
+                label="Pagar y Reservar" 
+                onPress={ () => handleOnSubmit() } 
+                size={ Button.sizes.medium }
+                backgroundColor={ Button.colors.primary }
+              /> */}
+               
+
+              <TouchableOpacity
+                style={styles.closeButton}
+                onPress={() => setModalVisible(false)}
+              >
+                <Text style={styles.closeButtonText}>Cancelar</Text>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
+        </View>
+      </Modal>
+)
 }
 
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    padding: 20,
+    paddingHorizontal: 20,
+    paddingBottom: 80,
     backgroundColor: '#F0F4F8',
   },
 
-  //dias
-
-  daysContainer: {
-    marginBottom: '5%',
-    maxHeight: '10%',
-  },
-  dayButton: {
-    height: '100%',
-    width: 80,
-    marginHorizontal: 5,
-    borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  selectedDayButton: {
-    backgroundColor: '#3BA0C6',
-  },
-  dayTextContainer: {
-    alignItems: 'center',
-  },
-  dayText: {
-    color: '#3BA0C6',
-    fontWeight: 'bold',
-    fontSize: 24,
-  },
-  selectedDayText: {
-    color: '#fff',
-  },
-  dayName: {
-    fontSize: 14,
-    color: '#A0A0A0',
-    marginTop: 5,
-  },
-
-  //locaciones
-
-  imageCarousel: {
-    paddingHorizontal: 10,
-    marginVertical: 15,
-  },
-  imageContainer: {
-    marginRight: 15,
-    borderRadius: 10,
-    overflow: 'hidden',
-    backgroundColor: '#fff',
-    width: 400, // Ajusta el ancho según necesites
-    elevation: 2, // Sombra para Android
-    shadowColor: '#000', // Sombra para iOS
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-  },
-  image: {
-    width: '100%',
-    height: 150,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-  },
-  infoContainer: {
-    padding: 10,
+  columnContainer: {
+    
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-  },
-  sportContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 5,
-  },
-  sport: {
-    fontSize: 14,
-    color: '#A0A0A0',
-    marginLeft: 5,
-  },
-  location: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
-  },
-  description: {
-    fontSize: 12,
-    color: '#777',
-    marginTop: 5,
-  },
-
-  pabellon: {
-    fontSize: 12,
-    color: '#777',
-  },
-  price: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
-    textAlign: 'right',
-  },
-  locationContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 5,
-  },
-  place: {
-    fontSize: 14,
-
-  },
-
-
-  
-  scheduleNote: {
-    textAlign: 'center',
-    color: '#A0A0A0',
-    marginBottom: 10,
-  },
-  hourScrollContainer: {
+    alignItems: 'space-around',
+    justifyContent: 'space-around',
     marginBottom: 20,
-    maxHeight: '5%',
-  },
-  hourContainer: {
-    flexDirection: 'row',
-  },
-  hourButton: {
-    borderWidth: 1,
-    borderColor: '#3BA0C6',
-    borderRadius: 20,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    marginRight: 10,
-  },
-  selectedHourButton: {
-    backgroundColor: '#3BA0C6',
-  },
-  hourText: {
-    color: '#3BA0C6',
-  },
-  selectedHourText: {
-    color: '#fff',
   },
   reserveButton: {
     backgroundColor: '#3BA0C6',
     borderRadius: 20,
     padding: 15,
     alignItems: 'center',
+    marginVertical: 20,
   },
   reserveButtonText: {
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
   },
-  // Ajustar el alto del contenedor del modal
-modalContainer: {
-  flex: 1,
-  justifyContent: 'center',
-  alignItems: 'center',
-  backgroundColor: 'rgba(0, 0, 0, 0.5)',
-},
-
-// Ajustar el alto del contenido del modal y permitir scroll vertical
-modalContent: {
-  width: '90%',
-  backgroundColor: '#fff',
-  borderRadius: 10,
-  padding: 20,
-  maxHeight: '70%', // Limita el alto del modal
-  overflow: 'scroll', // Permite el scroll si el contenido es más grande
-},
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    width: '90%',
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    padding: 20,
+    maxHeight: '70%',
+  },
   modalTitle: {
     fontSize: 24,
     fontWeight: 'bold',
@@ -433,14 +205,8 @@ modalContent: {
   },
   cardText: {
     fontSize: 16,
-    color: 'black',
+    color: '#000',
     marginBottom: 5,
-  },
-  formTitle: {
-    fontSize: 14,
-    color: '#777',
-    marginVertical: 5,
-    textAlign: 'center',
   },
   input: {
     width: '100%',
@@ -448,42 +214,28 @@ modalContent: {
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 8,
-    marginBottom: 15,
+    marginTop: 10,
     fontSize: 16,
   },
-  addParticipantButton: {
-    backgroundColor: '#e6f0ff',
-    padding: 10,
-    borderRadius: 5,
-    marginBottom: 15,
-    alignItems: 'center',
-  },
-  addParticipantText: {
-    fontSize: 16,
-    color: '#007BFF',
-  },
-  paymentCard: {
-    backgroundColor: '#f4f4f4',
-    padding: 15,
+  formTitle: {
+    fontSize: 14,
+    color: '#777',
     marginVertical: 10,
-    borderRadius: 8,
+    textAlign: 'center',
   },
-  paymentTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    color: '#333',
-  },
-  paymentText: {
-    fontSize: 16,
-    color: '#333',
-    marginBottom: 10,
+  buttonsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginTop: 20,
   },
   confirmButton: {
     backgroundColor: '#007BFF',
     padding: 15,
     borderRadius: 8,
     alignItems: 'center',
+    flex: 1,
+    marginRight: 10,
   },
   confirmButtonText: {
     color: '#fff',
@@ -495,17 +247,11 @@ modalContent: {
     padding: 15,
     borderRadius: 8,
     alignItems: 'center',
+    flex: 1,
   },
   closeButtonText: {
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
   },
-  buttonsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between', // Alinea los botones con espacio entre ellos
-    width: '100%',
-    marginBottom:40 // Ocupa todo el ancho disponible
-  },
-  
 });

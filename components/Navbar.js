@@ -2,11 +2,12 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'; 
 import { Ionicons } from '@expo/vector-icons'; // Asegúrate de tener instalada esta dependencia
+import { route as routePath } from '../configs/routes.config';
 
 // Componentes
-import Home from '../screens/Home'; 
 import Reservas from '../screens/Reservas'; 
 import Perfil from '../screens/Perfil'; 
+import Home from '../screens/Home';
 
 const Tab = createBottomTabNavigator();
 
@@ -16,28 +17,34 @@ export default function Navbar() {
       screenOptions={({ route }) => ({
         tabBarStyle: {
           position: 'absolute',
-          bottom: 20,  // Deja un espacio en la parte inferior
-          left: 20,    // Margen izquierdo
-          right: 20,   // Margen derecho
-          height: 80,  // Ajusta la altura de la barra
+          bottom: 10, // Deja un espacio en la parte inferior
+          left: 10,   // Margen izquierdo
+          right: 10,  // Margen derecho
+          height: 70, // Ajusta la altura de la barra
           backgroundColor: 'white',
-          borderRadius: 30,  // Borde redondeado
+          borderRadius: 20,  // Borde redondeado
           elevation: 10,   // Sombra en Android
           shadowColor: '#000',  // Sombra en iOS
           shadowOffset: { width: 0, height: 10 },  // Desplazamiento de la sombra
           shadowOpacity: 0.25,  // Opacidad de la sombra
           shadowRadius: 5,     // Radio de la sombra
-          padding: 25,
         },
         tabBarIcon: ({ color, size }) => {
           let iconName;
-
-          if (route.name === 'Home') {
-            iconName = 'home-outline';
-          } else if (route.name === 'Reservas') {
-            iconName = 'calendar-outline';
-          } else if (route.name === 'Perfil') {
-            iconName = 'person-outline';
+            
+          switch (route.name) {
+            case routePath.home:
+              iconName = 'home-outline';
+              break;
+            case routePath.reservas:
+              iconName = 'calendar-outline';
+              break;
+            case routePath.perfil:
+              iconName = 'person-outline';
+              break;
+            default:
+              iconName = 'home-outline';
+              break;
           }
 
           return (
@@ -45,7 +52,6 @@ export default function Navbar() {
               name={iconName} 
               size={size} 
               color={color} 
-
             />
           );
         },
