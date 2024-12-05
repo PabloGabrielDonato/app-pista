@@ -33,7 +33,7 @@ const handleLogout = async () => {
           <TextInput
             style={styles.input}
             placeholder="Correo"
-            value="pablo@ejemplo.com"
+            value={user.email}
             editable={false}
           />
 
@@ -41,7 +41,7 @@ const handleLogout = async () => {
           <TextInput
             style={styles.input}
             placeholder="DNI"
-            value="12345678"
+            value={user.dni}
             editable={false}
           />
         </View>
