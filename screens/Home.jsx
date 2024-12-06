@@ -14,7 +14,7 @@ import {
 import DatePicker from '../components/DatePicker';
 import HourPicker from '../components/HourPicker';
 import useUserStore from '../store/user.store';
-//import { Button } from 'react-native-ui-lib';
+import { Button } from 'react-native-ui-lib';
 
 export default function Home() {
   const [selectedDate, setSelectedDate] = useState(null);
@@ -113,20 +113,22 @@ const FormModal = ({ setModalVisible, modalVisible, selectedDate, selectedHour }
             </Text>
 
             <View style={styles.buttonsContainer}>
-              {/* <Button 
-                label="Pagar y Reservar" 
+              <Button 
+                label={"Pagar y Reservar" }
                 onPress={ () => handleOnSubmit() } 
-                size={ Button.sizes.medium }
-                backgroundColor={ Button.colors.primary }
-              /> */}
+                round={false}
+                size={ Button.sizes.large }
+              />
                
 
-              <TouchableOpacity
-                style={styles.closeButton}
+              <Button
+                outline={true}
+                label={"Cancelar"}
+                round={false}
+                size={ Button.sizes.large }
                 onPress={() => setModalVisible(false)}
               >
-                <Text style={styles.closeButtonText}>Cancelar</Text>
-              </TouchableOpacity>
+               </Button>
             </View>
           </ScrollView>
         </View>

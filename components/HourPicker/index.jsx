@@ -6,6 +6,7 @@ import {
   StyleSheet, 
   ScrollView 
 } from 'react-native';
+//import {  Button} from 'react-native-ui-lib';
 import useLocationStore from '../../store/location.store';
 
 const hours = [

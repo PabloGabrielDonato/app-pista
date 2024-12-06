@@ -61,7 +61,7 @@ const useUserStore = create(
         },
         logout: async () => {
           const { token } = get();
-        
+
           try {
             const response = await fetch(apiEndpoint.auth.logout, {
               method: 'POST',
@@ -75,7 +75,6 @@ const useUserStore = create(
             if (response.status >= 200) {
               set({ user: null, token: null });
               await AsyncStorage.removeItem('user-storage'); // Limpia el almacenamiento persistente
-
               return { success: true };
             } else {
               return { success: false, message: data.message || 'Error al deslogear usuario' };

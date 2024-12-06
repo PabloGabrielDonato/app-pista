@@ -1,17 +1,19 @@
 import React from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, TextInput, StyleSheet, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Logo from '../components/Logo';
-import AsyncStorage from '@react-native-async-storage/async-storage'; // Asegúrate de importar AsyncStorage
 import useUserStore from '../store/user.store';
+import { route } from '../configs/routes.config';
+import { Button, TextField } from 'react-native-ui-lib';
 
 const Perfil = () => {
   const navigation = useNavigation();
   const { logout, user } = useUserStore();
 
-const handleLogout = async () => {  
-  await logout();
-  navigation.navigate('Login');
+const handleLogout = () => {  
+  logout().then(
+    () => navigation.navigate(route.login)
+  );
 };
 
 
@@ -21,35 +23,41 @@ const handleLogout = async () => {
         <Logo />
         {/* Formulario de perfil */}
         <View style={styles.form}>
-          <Text style={styles.label}>Nombre</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Nombre de usuario"
-            value={user.name}
-            editable={false}
-          />
+          <View>
+            <Text style={styles.label}>Nombre</Text>
+            <TextField
+              placeholder="Nombre de usuario"
+              value={user?.name}
+              editable={false}
+            />
+          </View>
 
-          <Text style={styles.label}>Correo electrónico</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Correo"
-            value="pablo@ejemplo.com"
-            editable={false}
-          />
+          <View>
+            < Text style={styles.label}>Correo electrónico</Text>
+            <TextField
+              placeholder="Correo"
+              value={user?.email}
+              editable={false}
+            />
+          </View>
 
-          <Text style={styles.label}>DNI</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="DNI"
-            value="12345678"
-            editable={false}
-          />
+          <View>
+            <Text style={styles.label}>DNI</Text>
+            <TextInput
+              placeholder="DNI"
+              value={user?.dni}
+              editable={false}
+            />
+          </View>
         </View>
 
         {/* Botón de cerrar sesión */}
-        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-          <Text style={styles.logoutText}>Cerrar sesión</Text>
-        </TouchableOpacity>
+        <Button 
+            onPress={handleLogout}
+            label="Logout"
+            outline
+            color="danger"
+        />
       </View>
     </ScrollView>
   );

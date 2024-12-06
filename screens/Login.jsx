@@ -1,31 +1,36 @@
-import React, { useState,useEffect } from 'react';
-import { View, Text, TextInput, Pressable, StyleSheet, Alert } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage'; // Importar AsyncStorage
+import React, { useState } from 'react';
+import { View, Text, Alert, Pressable, StyleSheet } from 'react-native';
 import Logo from '../components/Logo'; 
 import useUserStore from '../store/user.store.js';
+import { route } from '../configs/routes.config.js';
+import { Button, TextField } from 'react-native-ui-lib';
 
 export default function Login({ navigation }) {
-
+  
+  const { login } = useUserStore(); 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
-  const { login } = useUserStore(); 
 
   // Función para manejar el login
   const handleLogin = async () => {
     // Simulación de autenticación exitosa
-    if (email === '' ||  password === '') alert('Falta completar el formulario')
+    if (email === '' ||  password === '') return Alert.alert('Falta completar el formulario')
 
       try {
         await login(email, password);
-        
         } catch (e) {
-          console.log('Error al guardar el token', e);
+          Alert.alert('Credenciales incorrectas');
         }
-      } 
+    }
+    
+    const handleKeyPress = (e) => {
+      if (e.nativeEvent.key === 'Enter') {
+        handleLogin();
+      }
+    };
 
     const goToRegister = () => {
-      navigation.navigate('Register'); // Navega a la pantalla Register
+      navigation.navigate(route.register); // Navega a la pantalla Register
     };
 
 
@@ -41,22 +46,20 @@ export default function Login({ navigation }) {
       </Text>
 
       <View style={styles.inputContainer}>
-        <TextInput 
-          style={styles.input} 
+        <TextField 
           placeholder="Email"
-          placeholderTextColor="#000"
           value={email}
+          onKeyPress={handleKeyPress} // Detecta tecla Enter
           onChangeText={setEmail} // Actualiza el valor del email
         />
       </View>
 
       <View style={styles.inputContainer}>
-        <TextInput 
-          style={styles.input} 
+        <TextField 
           placeholder="Contraseña"
-          placeholderTextColor="#000"
-          secureTextEntry={true}
+          secureTextEntry
           value={password}
+          onKeyPress={handleKeyPress} // Detecta tecla Enter
           onChangeText={setPassword} // Actualiza el valor de la contraseña
         />
       </View>
@@ -67,12 +70,11 @@ export default function Login({ navigation }) {
         </View>
 
         <View style={[styles.buttonContainer, styles.loginButtonContainer]}>
-          <Pressable 
-            style={[styles.button, styles.loginButton]} 
+          <Button 
+            label="Iniciar sesión"
             onPress={handleLogin} // Cambia la función de login
           >
-            <Text style={[styles.buttonLabel, { color: 'black' }]}>Iniciar sesión</Text>
-          </Pressable>
+          </Button>
         </View>
       </View>
     </View>
@@ -95,13 +97,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     justifyContent: 'center',
   },
-  input: {
-    paddingHorizontal: 10, // Espacio para el texto
-    fontSize: 16,
-    color: '#000', // Texto en negro
-    width: '100%',
-    height: '100%',
-  },
+  
   bottomContainer: {
     flexDirection: 'row',
     width: 320,
@@ -135,10 +131,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flexDirection: 'row',
   },
-  loginButton: {
-    borderColor: "#3BA0C6", // Fondo del botón de Iniciar sesión
-  },
   buttonLabel: {
+    color:'white',
     fontSize: 16,
     fontWeight: 'bold',
   },
