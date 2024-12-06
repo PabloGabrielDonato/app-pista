@@ -16,7 +16,7 @@ const LocationCarouselItem = ({ location, setSelectedLocation }) => {
         ...styles.imageContainer,
         borderColor: currentLocation?.id === location.id ? '#3BA0C6' : '#fff',
       }}
-    onPress={() => setCurrentLocation(location)}
+    onPress={() => {setCurrentLocation(location)}}
   >
     <Image 
       source={ location?.image ?? require('./../../assets/images/skating_rink.jpg') } 

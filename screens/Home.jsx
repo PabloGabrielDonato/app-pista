@@ -21,7 +21,7 @@ export default function Home() {
   const [selectedHour, setSelectedHour] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   
-  const { loadLocations, locations } = useLocationStore();
+  const { loadLocations, locations, loadTimeSlotsByDate, availableTimeSlots } = useLocationStore();
 
   useEffect(() => {
     loadLocations().catch();
