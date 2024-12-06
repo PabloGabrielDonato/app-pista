@@ -3,6 +3,9 @@ import { StyleSheet } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import 'react-native-gesture-handler';
+import './themes/ligth'
+
 
 // Componentes
 import Login from './screens/Login';
@@ -42,7 +45,7 @@ export default function App() {
   if (isSplashVisible) {
     return null; // Opcional: puedes mostrar un componente o animación personalizada aquí
   }
-
+  console.log(token)
   return (
         <NavigationContainer>
           {token !== null ? (
@@ -55,8 +58,8 @@ export default function App() {
             </Stack.Navigator>
           ) : (
             <Stack.Navigator initialRouteName={route.login}>
-              <Stack.Screen name={route.login} component={Login} />
-              <Stack.Screen name={route.register} component={Register} />
+              <Stack.Screen name={route.login} component={Login} options={{ headerShown: false }} />
+              <Stack.Screen name={route.register} component={Register} options={{ headerShown: false }} />
             </Stack.Navigator>
           )}
         </NavigationContainer>
