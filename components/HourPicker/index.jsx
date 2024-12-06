@@ -6,6 +6,7 @@ import {
   StyleSheet, 
   ScrollView 
 } from 'react-native';
+import useLocationStore from '../../store/location.store';
 
 const hours = [
   "08:00", "09:00", "10:00", "11:00", 
@@ -15,34 +16,40 @@ const hours = [
 
 const HourPicker = ({ selectedHour, setSelectedHour }) => {
   const handleHourSelect = (hour) => setSelectedHour(hour);
-
+  const { availableTimeSlots } = useLocationStore();
+  
+  
   return (
     <View style={styles.container}>
-      <Text style={styles.scheduleNote}>
-        Tenga en cuenta que los turnos son de 60 minutos.
-      </Text>
+      {
+        availableTimeSlots.length !== 0 &&
+        <Text style={styles.scheduleNote}>
+          Tenga en cuenta que los turnos son de 60 minutos.
+        </Text>
+      }
+
       <ScrollView 
         horizontal 
         showsHorizontalScrollIndicator={false} 
         contentContainerStyle={styles.hourContainer}
       >
-        {hours.map((hour) => (
+        {availableTimeSlots.map((timeSlot) => (
           <TouchableOpacity
-            key={hour}
+            key={timeSlot.timeSlot_id}
             style={[
               styles.hourButton, 
-              selectedHour === hour && styles.selectedHourButton
+              selectedHour === timeSlot.startTime && styles.selectedHourButton
             ]}
-            onPress={() => handleHourSelect(hour)}
+            onPress={() => handleHourSelect(timeSlot.startTime)}
           >
             <Text 
               style={
-                selectedHour === hour 
+                selectedHour === timeSlot.startTime 
                   ? styles.selectedHourText 
                   : styles.hourText
               }
             >
-              {hour}
+              {timeSlot.startTime}
             </Text>
           </TouchableOpacity>
         ))}
