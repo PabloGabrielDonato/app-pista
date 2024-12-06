@@ -31,7 +31,6 @@ const useLocationStore = create(
                         set({ locations: data, errors: null }); // Limpia errores si la solicitud es exitosa
                     } catch (error) {
                         set({ errors: error.message, locations: [] }); // Captura errores de red o de ejecución
-                        console.error('Failed to load locations:', error);
                     }
                 },
 
