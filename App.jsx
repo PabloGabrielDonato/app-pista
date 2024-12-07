@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
+import "@/global.css";
+import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
 import { StyleSheet } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import 'react-native-gesture-handler';
-import './themes/ligth'
 
 
 // Componentes
 import Login from './screens/Login';
-import Navbar from './components/Navbar'; 
+import Navbar from './components/Navbar';
 import Register from './screens/Register';
 import useLocationStore from './store/location.store';
 import useUserStore from './store/user.store';
@@ -47,23 +48,25 @@ export default function App() {
   }
   console.log(token)
   return (
-        <NavigationContainer>
-          {token !== null ? (
-            <Stack.Navigator initialRouteName={route.home}>
-              <Stack.Screen
-                name={route.home}
-                component={Navbar}
-                options={{ headerShown: false }}
-              />
-            </Stack.Navigator>
-          ) : (
-            <Stack.Navigator initialRouteName={route.login}>
-              <Stack.Screen name={route.login} component={Login} options={{ headerShown: false }} />
-              <Stack.Screen name={route.register} component={Register} options={{ headerShown: false }} />
-            </Stack.Navigator>
-          )}
-        </NavigationContainer>
-    );
+    <GluestackUIProvider mode="light">
+      <NavigationContainer>
+        {token !== null ? (
+          <Stack.Navigator initialRouteName={route.home}>
+            <Stack.Screen
+              name={route.home}
+              component={Navbar}
+              options={{ headerShown: false }}
+            />
+          </Stack.Navigator>
+        ) : (
+          <Stack.Navigator initialRouteName={route.login}>
+            <Stack.Screen name={route.login} component={Login} options={{ headerShown: false }} />
+            <Stack.Screen name={route.register} component={Register} options={{ headerShown: false }} />
+          </Stack.Navigator>
+        )}
+      </NavigationContainer>
+    </GluestackUIProvider>
+  );
 }
 
 const styles = StyleSheet.create({

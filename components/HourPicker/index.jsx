@@ -6,16 +6,11 @@ import {
   StyleSheet, 
   ScrollView 
 } from 'react-native';
-//import {  Button} from 'react-native-ui-lib';
 import useLocationStore from '../../store/location.store';
 
-const hours = [
-  "08:00", "09:00", "10:00", "11:00", 
-  "12:00", "13:00", "14:00", "15:00", 
-  "16:00", "17:00", "18:00", "19:00"
-];
 
 const HourPicker = ({ selectedHour, setSelectedHour }) => {
+
   const handleHourSelect = (hour) => setSelectedHour(hour);
   const { availableTimeSlots } = useLocationStore();
   
@@ -41,11 +36,11 @@ const HourPicker = ({ selectedHour, setSelectedHour }) => {
               styles.hourButton, 
               selectedHour === timeSlot.startTime && styles.selectedHourButton
             ]}
-            onPress={() => handleHourSelect(timeSlot.startTime)}
+            onPress={() => handleHourSelect(timeSlot)}
           >
             <Text 
               style={
-                selectedHour === timeSlot.startTime 
+                selectedHour?.startTime === timeSlot.startTime 
                   ? styles.selectedHourText 
                   : styles.hourText
               }
@@ -92,8 +87,9 @@ const styles = StyleSheet.create({
     fontSize: 16, // Tamaño de fuente un poco mayor para mejor visibilidad
   },
   selectedHourText: {
-    color: '#fff',
+    color: '#fff',  
     fontSize: 16,
+    backgroundColor: '#3BA0C6',
   },
 });
 

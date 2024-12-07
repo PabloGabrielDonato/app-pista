@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import Logo from '../components/Logo';
 import useUserStore from '../store/user.store';
 import { route } from '../configs/routes.config';
-import { Button, TextField } from 'react-native-ui-lib';
+import { Button, ButtonText } from '@/components/ui/button';
 
 const Perfil = () => {
   const navigation = useNavigation();
@@ -25,20 +25,20 @@ const handleLogout = () => {
         <View style={styles.form}>
           <View>
             <Text style={styles.label}>Nombre</Text>
-            <TextField
+            {/* <TextField
               placeholder="Nombre de usuario"
               value={user?.name}
               editable={false}
-            />
+            /> */}
           </View>
 
           <View>
             < Text style={styles.label}>Correo electrónico</Text>
-            <TextField
+            {/* <TextField
               placeholder="Correo"
               value={user?.email}
               editable={false}
-            />
+            /> */}
           </View>
 
           <View>
@@ -54,10 +54,9 @@ const handleLogout = () => {
         {/* Botón de cerrar sesión */}
         <Button 
             onPress={handleLogout}
-            label="Logout"
-            outline
-            color="danger"
-        />
+        >
+          <ButtonText>Cerrar sesión</ButtonText>
+        </Button>
       </View>
     </ScrollView>
   );

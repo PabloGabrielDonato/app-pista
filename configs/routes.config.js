@@ -9,6 +9,9 @@ export const apiEndpoint = {
     locations:{
         index: `${BACKEND_URL}/api/locations`,
     },
+    bookings:{
+        create: `${BACKEND_URL}/api/bookings`,
+    }
 }
 
 export const route = {

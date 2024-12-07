@@ -3,7 +3,8 @@ import { View, Text, Alert, Pressable, StyleSheet } from 'react-native';
 import Logo from '../components/Logo'; 
 import useUserStore from '../store/user.store.js';
 import { route } from '../configs/routes.config.js';
-import { Button, TextField } from 'react-native-ui-lib';
+import { Button, ButtonText } from '@/components/ui/button';
+import { Input, InputField } from '@/components/ui/input';
 
 export default function Login({ navigation }) {
   
@@ -46,22 +47,24 @@ export default function Login({ navigation }) {
       </Text>
 
       <View style={styles.inputContainer}>
-        <TextField 
-          placeholder="Email"
-          value={email}
-          onKeyPress={handleKeyPress} // Detecta tecla Enter
-          onChangeText={setEmail} // Actualiza el valor del email
-        />
+        <Input variant='rounded' size='md'>
+          <InputField
+            value={email}
+            onChangeText={(text) => setEmail(text)}
+            placeholder="Email"
+          />
+        </Input>
       </View>
 
       <View style={styles.inputContainer}>
-        <TextField 
-          placeholder="Contraseña"
-          secureTextEntry
-          value={password}
-          onKeyPress={handleKeyPress} // Detecta tecla Enter
-          onChangeText={setPassword} // Actualiza el valor de la contraseña
-        />
+        <Input variant='rounded' size='md'>
+          <InputField
+            value={password}
+            onChangeText={(text) => setPassword(text)}
+            placeholder="Contraseña"
+            secureTextEntry
+          />
+        </Input>
       </View>
 
       <View style={styles.bottomContainer}>
@@ -71,9 +74,9 @@ export default function Login({ navigation }) {
 
         <View style={[styles.buttonContainer, styles.loginButtonContainer]}>
           <Button 
-            label="Iniciar sesión"
             onPress={handleLogin} // Cambia la función de login
           >
+            <ButtonText>Iniciar sesión</ButtonText>
           </Button>
         </View>
       </View>
