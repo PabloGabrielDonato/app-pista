@@ -10,12 +10,9 @@ const Perfil = () => {
   const navigation = useNavigation();
   const { logout, user } = useUserStore();
 
-const handleLogout = () => {  
-  logout().then(
-    () => navigation.navigate(route.login)
-  );
-};
-
+  const handleLogout = () => {
+    logout().then(() => navigation.navigate(route.login));
+  };
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -23,27 +20,30 @@ const handleLogout = () => {
         <Logo />
         {/* Formulario de perfil */}
         <View style={styles.form}>
-          <View>
+          <View style={styles.inputContainer}>
             <Text style={styles.label}>Nombre</Text>
-            {/* <TextField
-              placeholder="Nombre de usuario"
+            <TextInput
+              style={styles.inputField}
+              placeholder="Nombre"
               value={user?.name}
               editable={false}
-            /> */}
+            />
           </View>
 
-          <View>
-            < Text style={styles.label}>Correo electrónico</Text>
-            {/* <TextField
-              placeholder="Correo"
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Correo electrónico</Text>
+            <TextInput
+              style={styles.inputField}
+              placeholder="Correo electrónico"
               value={user?.email}
               editable={false}
-            /> */}
+            />
           </View>
 
-          <View>
+          <View style={styles.inputContainer}>
             <Text style={styles.label}>DNI</Text>
             <TextInput
+              style={styles.inputField}
               placeholder="DNI"
               value={user?.dni}
               editable={false}
@@ -52,9 +52,7 @@ const handleLogout = () => {
         </View>
 
         {/* Botón de cerrar sesión */}
-        <Button 
-            onPress={handleLogout}
-        >
+        <Button onPress={handleLogout}>
           <ButtonText>Cerrar sesión</ButtonText>
         </Button>
       </View>
@@ -76,21 +74,23 @@ const styles = StyleSheet.create({
   form: {
     marginBottom: 20,
   },
+  inputContainer: {
+    marginBottom: 20,
+  },
   label: {
     fontSize: 16,
     color: '#4A4A4A',
     marginBottom: 8,
   },
-  input: {
+  inputField: {
     backgroundColor: '#FFFFFF',
     padding: 10,
     borderColor: '#3BA0C6',
     borderWidth: 2,
     borderRadius: 10,
-    height: 60,
-    marginBottom: 20,
     fontSize: 16,
     color: '#4A4A4A',
+    height: 50,
   },
   logoutButton: {
     backgroundColor: '#FF3B30',
