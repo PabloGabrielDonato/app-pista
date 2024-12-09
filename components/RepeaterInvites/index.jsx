@@ -15,7 +15,7 @@ const RepeaterInvites = ({ setInvites }) => {
       setDni('');
       setInvites((prevInvites) => [
         ...prevInvites,
-        { name, lastName: last_name, dni },
+        { name, last_name, dni },
       ]);
           
     } else {

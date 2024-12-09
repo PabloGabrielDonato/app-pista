@@ -14,6 +14,7 @@ const useLocationStore = create(
             (set, get) => ({
                 loadLocations: async () => {
                     try {
+                        console.log('location URL', apiEndpoint.locations.index)
                         const response = await fetch(apiEndpoint.locations.index, {
                             headers: {
                                 'Content-Type': 'application/json',

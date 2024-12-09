@@ -20,7 +20,8 @@ export default function Login({ navigation }) {
       try {
         await login(email, password);
         } catch (e) {
-          Alert.alert('Credenciales incorrectas');
+          console.log(e);
+          alert('Credenciales incorrectas');
         }
     }
     
@@ -39,6 +40,7 @@ export default function Login({ navigation }) {
     <View style={styles.container}>
       <Logo />
 
+      <Text>Servidor { process.env.EXPO_PUBLIC_BACKEND_URL }</Text>
       <Text style={styles.registerText}>
         ¿No tenés cuenta todavía? 
         <Pressable onPress={goToRegister}>
@@ -74,7 +76,7 @@ export default function Login({ navigation }) {
 
         <View style={[styles.buttonContainer, styles.loginButtonContainer]}>
           <Button 
-            onPress={handleLogin} // Cambia la función de login
+            onPress={()=> handleLogin()} // Cambia la función de login
           >
             <ButtonText>Iniciar sesión</ButtonText>
           </Button>

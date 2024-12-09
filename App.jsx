@@ -12,22 +12,20 @@ import 'react-native-gesture-handler';
 import Login from './screens/Login';
 import Navbar from './components/Navbar';
 import Register from './screens/Register';
-import useLocationStore from './store/location.store';
 import useUserStore from './store/user.store';
 import { route } from './configs/routes.config';
+import BookingForm from './screens/BookingForm';
 
 const Stack = createStackNavigator();
 
 export default function App() {
   const [isSplashVisible, setSplashVisible] = useState(true);
-  const { loadLocations } = useLocationStore();
   const { token } = useUserStore();
 
   useEffect(() => {
     const initializeApp = async () => {
       try {
         await SplashScreen.preventAutoHideAsync();
-        await loadLocations();
       } catch (error) {
         console.error('Error during initialization:', error);
       } finally {
@@ -46,17 +44,14 @@ export default function App() {
   if (isSplashVisible) {
     return null; // Opcional: puedes mostrar un componente o animación personalizada aquí
   }
-  console.log(token)
+  
   return (
     <GluestackUIProvider mode="light">
       <NavigationContainer>
         {token !== null ? (
           <Stack.Navigator initialRouteName={route.home}>
-            <Stack.Screen
-              name={route.home}
-              component={Navbar}
-              options={{ headerShown: false }}
-            />
+            <Stack.Screen name={route.home} component={Navbar} options={{ headerShown: false }} />
+            <Stack.Screen name={route.bookingForm} component={BookingForm} options={{ headerShown: false }} />
           </Stack.Navigator>
         ) : (
           <Stack.Navigator initialRouteName={route.login}>
