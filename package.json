@@ -19,6 +19,7 @@
     "@gluestack-ui/input": "^0.1.32",
     "@gluestack-ui/nativewind-utils": "^1.0.26",
     "@gluestack-ui/overlay": "^0.1.16",
+    "@gluestack-ui/spinner": "^0.1.15",
     "@gluestack-ui/toast": "^1.0.8",
     "@lottiefiles/dotlottie-react": "^0.6.5",
     "@react-native-async-storage/async-storage": "1.23.1",
@@ -33,6 +34,7 @@
     "expo": "^52.0.0",
     "expo-image": "~2.0.3",
     "expo-image-picker": "~16.0.3",
+    "expo-linking": "~7.0.3",
     "expo-splash-screen": "~0.29.13",
     "expo-status-bar": "~2.0.0",
     "lottie-react-native": "^7.0.0",
@@ -54,7 +56,7 @@
     "recyclerlistview": "^4.2.1",
     "tailwindcss": "^3.4.16",
     "zustand": "^5.0.1",
-    "expo-linking": "~7.0.3"
+    "@react-native-community/datetimepicker": "8.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

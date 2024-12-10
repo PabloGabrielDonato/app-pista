@@ -8,6 +8,10 @@ const { width, height } = Dimensions.get('window'); // Obtiene las dimensiones d
 
 const LocationCarouselItem = ({ location, setSelectedLocation }) => {
   const {setCurrentLocation, currentLocation }  = useLocationStore();
+  console.log("Image URL:", location.image);
+
+
+
 
   return (
   <TouchableOpacity
@@ -19,10 +23,12 @@ const LocationCarouselItem = ({ location, setSelectedLocation }) => {
     onPress={() => {setCurrentLocation(location)}}
   >
     <Image 
-      source={ location?.image ?? require('./../../assets/images/skating_rink.jpg') } 
+      source={location?.image}
       style={styles.image} 
-      contentFit='cover'
+      contentFit='cover' 
+      
     />
+
     {/* Información de la locación */}
     <View style={styles.infoContainer}>
       <View>
@@ -45,6 +51,7 @@ const LocationCarouselItem = ({ location, setSelectedLocation }) => {
     </View>
   </TouchableOpacity>
   )
+  
 };
 
 const styles = StyleSheet.create({

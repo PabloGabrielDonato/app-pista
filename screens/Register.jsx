@@ -11,6 +11,7 @@ import {
   Platform 
 } from 'react-native';
 import useUserStore from '../store/user.store.js'; // Importa el store
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default function Register({ navigation }) {
   const [form, setForm] = useState({
@@ -44,7 +45,7 @@ export default function Register({ navigation }) {
       //dni: form.dni,
       //address: form.address,
       //phone: form.phone,
-      //birth_date: form.birth_date,
+      birth_date: form.birth_date,
       email: form.email,
       password: form.password,
       password_confirmation: form.password_confirmation
@@ -52,6 +53,14 @@ export default function Register({ navigation }) {
 
     
   };
+
+  const [date, setDate] = useState(new Date());
+
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate;
+    setDate(currentDate);
+  };
+
 
   return (
     <KeyboardAvoidingView
@@ -103,13 +112,18 @@ export default function Register({ navigation }) {
           keyboardType="phone-pad"
         />
 
-        <TextInput
-          style={styles.input}
-          placeholder="Fecha de nacimiento (YYYY-MM-DD)"
-          placeholderTextColor="#000"
-          value={form.birth_date}
-          onChangeText={(value) => handleInputChange('birth_date', value)}
-        />
+        <DateTimePicker
+            placeholderTextColor="#000"
+            placeholder="Fecha de nacimiento"
+            value={date}
+            onChange={onChange}
+            mode= "date"
+  
+        >
+
+        </DateTimePicker>
+
+
 
         <TextInput
           style={styles.input}

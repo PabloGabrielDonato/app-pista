@@ -1,3 +1,4 @@
+import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 import {BACKEND_URL} from './app.config';
 
 export const apiEndpoint = {
@@ -11,6 +12,7 @@ export const apiEndpoint = {
     },
     bookings:{
         create: `${BACKEND_URL}/api/bookings`,
+        get: `${BACKEND_URL}/api/bookings`,
     }
 }
 

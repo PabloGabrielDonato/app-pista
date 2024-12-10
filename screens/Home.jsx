@@ -33,13 +33,7 @@ export default function Home() {
     loadLocations().then();
   }, []);
 
-  if(errors){
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>{errors}</Text>
-      </View>
-    )
-  }
+
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
