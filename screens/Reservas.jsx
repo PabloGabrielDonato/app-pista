@@ -4,10 +4,9 @@ import { useNavigation } from '@react-navigation/native';
 import useUserStore from '../store/user.store';
 import { apiEndpoint } from '../configs/routes.config';
 
-
 const MisReservas = () => {
   const [activeTab, setActiveTab] = useState('Activas'); // Pestaña activa
-  const [bookings, setBookings] = useState([]); // Lista de bookings
+  const [bookings, setBookings] = useState([]); // Lista de reservas
   const [loading, setLoading] = useState(true); // Estado de carga
   const { token } = useUserStore(); // Obtener el token del usuario
   const navigation = useNavigation();
@@ -19,15 +18,14 @@ const MisReservas = () => {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`, 
+          Authorization: `Bearer ${token}`,
         },
       });
       const data = await response.json();
       if (response.ok) {
-        setBookings(data || []); 
-        console.log(data);
+        setBookings(data || []);
       } else {
-        console.error('Error al obtener bookings:', data.message);
+        console.error('Error al obtener reservas:', data.message);
       }
     } catch (error) {
       console.error('Error al conectar con el servidor:', error);
@@ -35,7 +33,6 @@ const MisReservas = () => {
       setLoading(false);
     }
   };
-  
 
   useEffect(() => {
     fetchBookings();
@@ -49,59 +46,90 @@ const MisReservas = () => {
     setActiveTab(tabName); // Cambia la pestaña activa
   };
 
-  // Filtrar bookings según la pestaña activa
-  //const filteredBookings = bookings.filter((booking) => booking.status === activeTab);
+  // Obtener la fecha actual sin la hora
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  // Filtrar reservas según la pestaña activa
+  const filteredBookings = bookings.filter((booking) => {
+    const bookingDate = new Date(booking.date);
+    bookingDate.setHours(0, 0, 0, 0);
+
+    if (activeTab === 'Activas') {
+      return bookingDate >= today;
+    }
+    if (activeTab === 'Finalizadas') {
+      return bookingDate < today;
+    }
+    return false;
+  });
 
   return (
     <View style={styles.container}>
-      {/* Barra de filtros */}
+      {/* Barra de pestañas */}
       <View style={styles.tabBar}>
         <TouchableOpacity onPress={() => handleTabPress('Activas')}>
           <Text style={[styles.tab, activeTab === 'Activas' && styles.activeTab]}>
-            Activas ({bookings.filter((booking) => booking.status === 'Activas').length})
+            Activas ({bookings.filter((booking) => new Date(booking.date) >= today).length})
           </Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => handleTabPress('Finalizadas')}>
           <Text style={[styles.tab, activeTab === 'Finalizadas' && styles.activeTab]}>
-            Finalizadas ({bookings.filter((booking) => booking.status === 'Finalizadas').length})
+            Finalizadas ({bookings.filter((booking) => new Date(booking.date) < today).length})
           </Text>
         </TouchableOpacity>
       </View>
 
-      {/* Lista de bookings */}
+      {/* Lista de reservas */}
       {loading ? (
         <Text style={styles.loadingText}>Cargando reservas...</Text>
-      ) : bookings.length > 0 ? (
-      <FlatList
-        data={bookings}
-        keyExtractor={(booking) => booking.id.toString()}
-        renderItem={({ item: booking }) => (
-          
-          <View style={styles.reservationCard}>
-            <Text style={styles.reservationTitle}>Reserva #{booking.id}</Text>
-            <View style={styles.reservationDetails}>
-              <Text style={styles.detailText}>
-                <Text style={styles.label}>Fecha:</Text> {booking.date}
+      ) : filteredBookings.length > 0 ? (
+        <FlatList
+          data={filteredBookings}
+          keyExtractor={(booking) => booking.id.toString()}
+          renderItem={({ item: booking }) => (
+            <View style={styles.reservationCard}>
+              <Text style={styles.reservationTitle}>Reserva #{booking.id}</Text>
+              <View style={styles.reservationDetails}>
+                <Text style={styles.detailText}>
+                  <Text style={styles.label}>Fecha:</Text> {booking.date}
+                </Text>
+                <Text style={styles.detailText}>
+                  <Text style={styles.label}>Hora:</Text> {booking.time_slots[0].start_time}
+                </Text>
+                <Text style={styles.detailText}>
+                <Text style={styles.label}>Estado de pago:</Text>{' '}
+                <Text
+                  style={{
+                    color:
+                      booking.payment.status === 'approved'
+                        ? 'green'
+                        : booking.payment.status === 'rejected'
+                        ? 'red'
+                        : booking.payment.status === 'pending_approval'
+                        ? 'orange'
+                        : 'black',
+                  }}
+                >
+                  {booking.payment.status === 'approved'
+                    ? 'Aprobado'
+                    : booking.payment.status === 'rejected'
+                    ? 'Rechazado'
+                    : booking.payment.status === 'pending_approval'
+                    ? 'Pendiente'
+                    : booking.payment.status}
+                </Text>
               </Text>
-              <Text style={styles.detailText}>
-                <Text style={styles.label}>Hora:</Text> {booking.time_slots[0].start_time}
-              </Text>
-              <Text style={styles.detailText}>
-                <Text style={styles.label}>Estado de pago:</Text> {booking.payment.status}
-              </Text>
+              </View>
+              <TouchableOpacity
+                style={styles.actionButton}
+                onPress={() => console.log(`Ver detalles de reserva ${booking.id}`)}
+              >
+                <Text style={styles.actionButtonText}>Ver Detalles</Text>
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity
-              style={styles.actionButton}
-              onPress={() => console.log(`Ver detalles de reserva ${booking.id}`)}
-            >
-              <Text style={styles.actionButtonText}>Ver Detalles</Text>
-            </TouchableOpacity>
-          </View>
-
-        )}
-
-      />
-
+          )}
+        />
       ) : (
         <View style={styles.noReservations}>
           <Text style={styles.message}>No tienes reservas en esta categoría.</Text>
@@ -156,9 +184,30 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 2,
   },
-  reservationText: {
-    fontSize: 16,
+  reservationTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  reservationDetails: {
+    marginBottom: 15,
+  },
+  detailText: {
+    fontSize: 14,
     color: '#333',
+  },
+  label: {
+    fontWeight: 'bold',
+  },
+  actionButton: {
+    backgroundColor: '#007AFF',
+    paddingVertical: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  actionButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
   },
   noReservations: {
     alignItems: 'center',
