@@ -36,22 +36,7 @@ export default function Register({ navigation }) {
     if (form.password !== form.password_confirmation) {
       Alert.alert('Error', 'Las contraseñas no coinciden');
       return;
-    }
-
-    console.log(form)
-     await register({
-      name: form.name,
-      last_name: form.last_name,
-      //dni: form.dni,
-      //address: form.address,
-      //phone: form.phone,
-      birth_date: form.birth_date,
-      email: form.email,
-      password: form.password,
-      password_confirmation: form.password_confirmation
-    });
-
-    
+    }    
   };
 
   const [date, setDate] = useState(new Date());

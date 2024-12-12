@@ -40,7 +40,6 @@ export default function Login({ navigation }) {
     <View style={styles.container}>
       <Logo />
 
-      <Text>Servidor { process.env.EXPO_PUBLIC_BACKEND_URL }</Text>
       <Text style={styles.registerText}>
         ¿No tenés cuenta todavía? 
         <Pressable onPress={goToRegister}>

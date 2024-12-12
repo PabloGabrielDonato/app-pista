@@ -66,7 +66,7 @@ const BookingForm = ({route}) => {
             Para completar tu reserva, termina de completar los siguientes datos
           </Text>
           <Image
-            source={require('../assets/images/skating_rink.jpg')}
+            source={require('../assets/skating_rink.jpg')}
             style={styles.image}
           />
           <Text style={styles.text}>Pista de entrenamiento profesional</Text>

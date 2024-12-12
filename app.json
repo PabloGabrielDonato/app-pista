@@ -4,7 +4,7 @@
     "slug": "reservas",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/logo_cap.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/logo_cap.png",
