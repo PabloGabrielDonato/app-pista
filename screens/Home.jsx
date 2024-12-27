@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import LocationCarousel from '../components/LocationCarousel';
 import useLocationStore from '../store/location.store';
+import * as Linking from 'expo-linking';
 import {
   View,
   Text,
@@ -14,14 +15,17 @@ import {
 import DatePicker from '../components/DatePicker';
 import HourPicker from '../components/HourPicker';
 import useUserStore from '../store/user.store';
-import { Button } from 'react-native-ui-lib';
+import { Button, ButtonText } from '..//components/ui/button';
+import RepeaterInvites from '../components/RepeaterInvites';
+import { apiEndpoint } from '../configs/routes.config';
 
 export default function Home() {
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedHour, setSelectedHour] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
-  
-  const { loadLocations, locations, loadTimeSlotsByDate, availableTimeSlots } = useLocationStore();
+
+
+  const { loadLocations, locations, } = useLocationStore();
 
   useEffect(() => {
     loadLocations().catch();
@@ -43,97 +47,119 @@ export default function Home() {
       </TouchableOpacity>
 
       {/* Modal de Reserva */}
-      <FormModal 
-        setModalVisible={setModalVisible} 
-        modalVisible={modalVisible} 
+      <FormModal
+        setModalVisible={setModalVisible}
+        modalVisible={modalVisible}
         selectedDate={selectedDate}
         selectedHour={selectedHour}
-        />
+      />
     </ScrollView>
   );
 }
 
 const FormModal = ({ setModalVisible, modalVisible, selectedDate, selectedHour }) => {
-  const [peopleCount, setPeopleCount] = useState(1);
   const { currentLocation } = useLocationStore();
-  const { user } = useUserStore();
+  const { user, token } = useUserStore();
 
-  const handleOnSubmit = () => {
+  const handleOnSubmit = async () => {
     alert('Formulario enviado');
+
+    const bodyForm = {
+      location_id: currentLocation.id,
+      timeSlots: [selectedHour.timeSlot_id],
+      invites: invites,
+      date: selectedDate,
+    }
+
+    try {
+      const response = await fetch(apiEndpoint.bookings.create, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify(bodyForm),
+      })
+      data = await response.json()
+      const supported = await Linking.canOpenURL(data.init_point);
+      if (supported) {
+        await Linking.openURL(data.init_point);
+      } else {
+        alert('No se puede abrir el enlace');
+      }
+
+    } catch (error) {
+      console.error('Error al crear reserva:', error);
+    }
     setModalVisible(false);
   }
 
 
+  const [invites, setInvites] = useState([]);
   return (
-  <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <View style={styles.modalContainer}>
-          <ScrollView style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Confirmar reserva</Text>
-            <Text style={styles.subTitle}>¡Ya casi terminamos!</Text>
-            <Text style={styles.text}>
-              Para completar tu reserva, termina de completar los siguientes datos
-            </Text>
-            <Image
-              source={require('../assets/images/skating_rink.jpg')}
-              style={styles.image}
-            />
-            <Text style={styles.text}>Pista de entrenamiento profesional</Text>
-            <Text style={styles.text}>Parque Roca</Text>
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={modalVisible}
+      onRequestClose={() => setModalVisible(false)}
+    >
+      <View style={styles.modalContainer}>
+        <ScrollView style={styles.modalContent}>
+          <Text style={styles.modalTitle}>Confirmar reserva</Text>
+          <Text style={styles.subTitle}>¡Ya casi terminamos!</Text>
+          <Text style={styles.text}>
+            Para completar tu reserva, termina de completar los siguientes datos
+          </Text>
+          <Image
+            source={require('../assets/images/skating_rink.jpg')}
+            style={styles.image}
+          />
+          <Text style={styles.text}>Pista de entrenamiento profesional</Text>
+          <Text style={styles.text}>Parque Roca</Text>
 
-            {/* Detalles de la reserva */}
-            <View style={styles.columnContainer}>
-              <View style={styles.card}>
-                <Text style={styles.cardText}>Fecha MAR. 1/10/24</Text>
-                <Text style={styles.cardText}>Turno 13:00 - 14:00</Text>
-                <Text style={styles.cardText}>Pista profesional</Text>
-              </View>
-              <View style={styles.card}>
-                <Text style={styles.cardText}>Nombre {user?.name}</Text>
-                <Text style={styles.cardText}>DNI {user?.dni}</Text>
-                <Text style={styles.cardText}>Cantidad de personas</Text>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Número de personas"
-                  placeholderTextColor="#000000"
-                  value={`${peopleCount}`}
-                  onChangeText={(text) => setPeopleCount(parseInt(text) || 1)}
-                />
-              </View>
+          {/* Detalles de la reserva */}
+          <View style={styles.columnContainer}>
+            <View style={styles.card}>
+              <Text style={styles.cardText}>Fecha MAR. 1/10/24</Text>
+              <Text style={styles.cardText}>Turno 13:00 - 14:00</Text>
+              <Text style={styles.cardText}>Pista profesional</Text>
             </View>
+            <View style={styles.card}>
+              <Text style={styles.cardText}>Nombre {user?.name}</Text>
+              <Text style={styles.cardText}>DNI {user?.dni}</Text>
+              <Text style={styles.cardText}>Cantidad de personas</Text>
 
-            {/* Formulario de datos de reserva */}
-            <Text style={styles.formTitle}>
-              Si usted tiene una licencia CAP, al indicar su número de DNI se le
-              aplicará un descuento
-            </Text>
+              <Text>Participantes (incluido el usuario) {invites.length + 1}</Text>
+              <RepeaterInvites setInvites={setInvites} />
 
-            <View style={styles.buttonsContainer}>
-              <Button 
-                label={"Pagar y Reservar" }
-                onPress={ () => handleOnSubmit() } 
-                round={false}
-                size={ Button.sizes.large }
-              />
-               
-
-              <Button
-                outline={true}
-                label={"Cancelar"}
-                round={false}
-                size={ Button.sizes.large }
-                onPress={() => setModalVisible(false)}
-              >
-               </Button>
             </View>
-          </ScrollView>
-        </View>
-      </Modal>
-)
+          </View>
+
+          {/* Formulario de datos de reserva */}
+          <Text style={styles.formTitle}>
+            Si usted tiene una licencia CAP, al indicar su número de DNI se le
+            aplicará un descuento
+          </Text>
+
+          <View style={styles.buttonsContainer}>
+            <Button
+
+              onPress={() => handleOnSubmit()}
+            >
+              <ButtonText>Pagar y Reservar</ButtonText>
+            </Button>
+
+            <Button
+              onPress={() => setModalVisible(false)}
+            >
+              <ButtonText>Cancelar</ButtonText>
+            </Button>
+          </View>
+        </ScrollView>
+      </View>
+    </Modal>
+  )
 }
 
 const styles = StyleSheet.create({
@@ -145,7 +171,7 @@ const styles = StyleSheet.create({
   },
 
   columnContainer: {
-    
+
     flexDirection: 'row',
     alignItems: 'space-around',
     justifyContent: 'space-around',

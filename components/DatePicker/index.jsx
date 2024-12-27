@@ -61,8 +61,8 @@ const generateDays = () => {
     const date = today.plus({ days: i }); // Incrementar días
     const day = date.day;
     const dayString = day < 10 ? `0${day}` : day.toString();
-    const dayName = date.toFormat('ccc'); // Día abreviado
-    const monthName = date.toFormat('LLL'); // Mes abreviado
+    const dayName = date.setLocale('es').toFormat('ccc'); // Día abreviado en español
+    const monthName = date.setLocale('es').toFormat('LLL'); // Mes abreviado en español
 
     days.push({
       day: dayString,
