@@ -6,52 +6,46 @@ import useLocationStore from '../../store/location.store';
 
 const { width, height } = Dimensions.get('window'); // Obtiene las dimensiones de la pantalla
 
-const LocationCarouselItem = ({ location, setSelectedLocation }) => {
-  const {setCurrentLocation, currentLocation }  = useLocationStore();
-  console.log("Image URL:", location.image);
+const LocationCarouselItem = ({ location }) => {
+  const { setCurrentLocation, currentLocation } = useLocationStore();
 
-
-
-
+  
   return (
-  <TouchableOpacity
-    key={location.id}
-    style={{
+    <TouchableOpacity
+      key={location.id}
+      style={{
         ...styles.imageContainer,
         borderColor: currentLocation?.id === location.id ? '#3BA0C6' : '#fff',
       }}
-    onPress={() => {setCurrentLocation(location)}}
-  >
+      onPress={() => setCurrentLocation(location)}
+    >
     <Image 
-      source={location?.image}
-      style={styles.image} 
-      contentFit='cover' 
-      
+        source={{ uri: location?.image }} // Usa image_url
+        style={styles.image} 
+        contentFit='cover' 
     />
-
-    {/* Información de la locación */}
-    <View style={styles.infoContainer}>
-      <View>
-        <Text style={styles.location}>
-          {location.name || 'Pista de entrenamiento profesional'}
-        </Text>
-        <Text style={styles.pabellon}>
-          {location.pavilion || 'Pabellón Europa'}
-        </Text>
-        <Text style={styles.description}>
-          {location.description || 'Sin descripción disponible'}
-        </Text>
+      {/* Información de la locación */}
+      <View style={styles.infoContainer}>
+        <View>
+          <Text style={styles.location}>
+            {location.name || 'Pista de entrenamiento profesional'}
+          </Text>
+          <Text style={styles.pabellon}>
+            {location.pavilion || 'Pabellón Europa'}
+          </Text>
+          <Text style={styles.description}>
+            {location.description || 'Sin descripción disponible'}
+          </Text>
+        </View>
+        <View style={styles.locationContainer}>
+          <Ionicons name="location-outline" size={16} color="#A0A0A0" />
+          <Text style={styles.place}>
+            {location.address || 'Ubicación no especificada'}
+          </Text>
+        </View>
       </View>
-      <View style={styles.locationContainer}>
-        <Ionicons name="location-outline" size={16} color="#A0A0A0" />
-        <Text style={styles.place}>
-          {location.address || 'Ubicación no especificada'}
-        </Text>
-      </View>
-    </View>
-  </TouchableOpacity>
-  )
-  
+    </TouchableOpacity>
+  );
 };
 
 const styles = StyleSheet.create({
@@ -73,7 +67,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   image: {
-    width: '100%', // Ocupa todo el ancho del contenedor
+    width: '70%', // Ocupa todo el ancho del contenedor
     height: height * 0.25, // 25% de la altura de la pantalla
   },
   location: {

@@ -177,7 +177,8 @@ const styles = StyleSheet.create({
     padding: 15,
     marginVertical: 10,
     borderRadius: 8,
-    width: '90%',
+    minWidth: '80%', // Ajusta este valor para hacerlo más ancho
+    alignSelf: 'center', // Asegura que la tarjeta esté centrada
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,

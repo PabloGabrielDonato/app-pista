@@ -1,27 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import * as Linking from 'expo-linking';
 import {
   View,
   Text,
-  Image,
   TouchableOpacity,
   StyleSheet,
   ScrollView,
-  Modal,
 } from 'react-native';
-import { Button, ButtonText } from '@/components/ui/button';
-import RepeaterInvites from '@/components/RepeaterInvites';
-import { apiEndpoint, route } from '@/configs/routes.config';
 import LocationCarousel from '@/components/LocationCarousel';
 import useLocationStore from '@/store/location.store';
 import DatePicker from '@/components/DatePicker';
 import HourPicker from '@/components/HourPicker';
-import useUserStore from '@/store/user.store';
 import { useNavigation } from '@react-navigation/native';
-
+import { route } from '@/configs/routes.config';
 
 export default function Home() {
-
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedHour, setSelectedHour] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
@@ -33,25 +25,29 @@ export default function Home() {
     loadLocations().then();
   }, []);
 
-
-
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {/* Carrusel de locaciones */}
       <LocationCarousel locations={locations} />
+      
+      {/* Selector de fecha */}
       <DatePicker setSelectedDate={setSelectedDate} selectedDate={selectedDate} />
+
+      {/* Selector de hora */}
       <HourPicker selectedHour={selectedHour} setSelectedHour={setSelectedHour} />
 
-      {/* Botón de Reservar */}
-      <TouchableOpacity
-        style={styles.reserveButton}
-        onPress={() => navigation.navigate(route.bookingForm, {
-          selectedDate,
-          selectedHour,
-        })}
-      >
-        <Text style={styles.reserveButtonText}>Reservar</Text>
-      </TouchableOpacity>
+      {/* Botón de Reservar (solo visible si se selecciona un horario) */}
+      {selectedHour && (
+        <TouchableOpacity
+          style={styles.reserveButton}
+          onPress={() => navigation.navigate(route.bookingForm, {
+            selectedDate,
+            selectedHour,
+          })}
+        >
+          <Text style={styles.reserveButtonText}>Reservar</Text>
+        </TouchableOpacity>
+      )}
     </ScrollView>
   );
 }
@@ -62,14 +58,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingBottom: 80,
     backgroundColor: '#F0F4F8',
-  },
-
-  columnContainer: {
-
-    flexDirection: 'row',
-    alignItems: 'space-around',
-    justifyContent: 'space-around',
-    marginBottom: 20,
   },
   reserveButton: {
     backgroundColor: '#3BA0C6',
@@ -82,6 +70,12 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  columnContainer: {
+    flexDirection: 'row',
+    alignItems: 'space-around',
+    justifyContent: 'space-around',
+    marginBottom: 20,
   },
   modalContainer: {
     flex: 1,
