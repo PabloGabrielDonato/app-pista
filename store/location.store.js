@@ -14,6 +14,7 @@ const useLocationStore = create(
             (set, get) => ({
                 loadLocations: async () => {
                     try {
+                        console.log('location URL', apiEndpoint.locations.index)
                         const response = await fetch(apiEndpoint.locations.index, {
                             headers: {
                                 'Content-Type': 'application/json',
@@ -31,6 +32,7 @@ const useLocationStore = create(
                         set({ locations: data, errors: null }); // Limpia errores si la solicitud es exitosa
                     } catch (error) {
                         set({ errors: error.message, locations: [] }); // Captura errores de red o de ejecución
+                        console.error('Failed to load locations:', error);
                     }
                 },
 

@@ -14,6 +14,7 @@ import Register from './screens/Register';
 import useLocationStore from './store/location.store';
 import useUserStore from './store/user.store';
 import { route } from './configs/routes.config';
+import BookingForm from './screens/BookingForm';
 
 const Stack = createStackNavigator();
 
@@ -47,22 +48,19 @@ export default function App() {
   }
   console.log(token)
   return (
-        <NavigationContainer>
-          {token !== null ? (
-            <Stack.Navigator initialRouteName={route.home}>
-              <Stack.Screen
-                name={route.home}
-                component={Navbar}
-                options={{ headerShown: false }}
-              />
-            </Stack.Navigator>
-          ) : (
-            <Stack.Navigator initialRouteName={route.login}>
-              <Stack.Screen name={route.login} component={Login} options={{ headerShown: false }} />
-              <Stack.Screen name={route.register} component={Register} options={{ headerShown: false }} />
-            </Stack.Navigator>
-          )}
-        </NavigationContainer>
+    <NavigationContainer>
+    {token !== null ? (
+      <Stack.Navigator initialRouteName={route.home}>
+        <Stack.Screen name={route.home} component={Navbar} options={{ headerShown: false }} />
+        <Stack.Screen name={route.bookingForm} component={BookingForm} options={{ headerShown: false }} />
+      </Stack.Navigator>
+    ) : (
+      <Stack.Navigator initialRouteName={route.login}>
+        <Stack.Screen name={route.login} component={Login} options={{ headerShown: false }} />
+        <Stack.Screen name={route.register} component={Register} options={{ headerShown: false }} />
+      </Stack.Navigator>
+    )}
+  </NavigationContainer>
     );
 }
 

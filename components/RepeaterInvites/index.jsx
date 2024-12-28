@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { View } from 'react-native';
-import { Button, ButtonText } from '@/components/ui/button';
 import { Input, InputField } from '@/components/ui/input';
+import { Button, Colors } from 'react-native-ui-lib';
+import { AntDesign } from '@expo/vector-icons';
+import { Text } from '../ui/text';
+import { OutlinedButton } from '../ui/button';
 
 const RepeaterInvites = ({ setInvites }) => {
   const [name, setName] = useState('');
@@ -13,11 +16,12 @@ const RepeaterInvites = ({ setInvites }) => {
       setName('');
       setLastName('');
       setDni('');
+
       setInvites((prevInvites) => [
         ...prevInvites,
         { name, lastName: last_name, dni },
       ]);
-          
+      alert('invitado agregado')
     } else {
       alert('Por favor, completa todos los campos.');
     }
@@ -52,9 +56,22 @@ const RepeaterInvites = ({ setInvites }) => {
           />
         </Input>
       </View>
-      <Button onPress={handleOnSubmit}>
-        <ButtonText>Agregar Participante</ButtonText>
-      </Button>
+      <OutlinedButton
+        onPress={handleOnSubmit}
+        style={{
+          borderColor: 'red',
+        }}
+      >
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}
+        >
+          <AntDesign name="plus" size={24} color="black" style={{ marginRight: 8 }} />
+          <Text>Agregar Invitado</Text>
+        </View>
+      </OutlinedButton>
     </View>
   );
 };

@@ -16,6 +16,7 @@ export const apiEndpoint = {
 
 export const route = {
     home: 'Home',
+    bookingForm: 'BookingForm',
     reservas: 'Reservas',
     perfil: 'Perfil',
     login: 'Login',

@@ -49,18 +49,17 @@ const LocationCarouselItem = ({ location, setSelectedLocation }) => {
 
 const styles = StyleSheet.create({
   imageContainer: {
-    marginRight: 15,
     borderRadius: 10,
     borderWidth: 3,
-    overflow: 'hidden',
     backgroundColor: '#fff',
-    width: width * 0.9, // 90% del ancho de la pantalla
+    width: width * 0.85, // 90% del ancho de la pantalla
+    height: height * 0.40, // 25% de la altura de la pantalla
     elevation: 2,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 5,
-    marginBottom: 10,
+    margin: 10,
   },
   infoContainer: {
     padding: 10,
