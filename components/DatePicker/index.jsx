@@ -54,21 +54,22 @@ const DatePicker = ({ setSelectedDate, selectedDate }) => {
 };
 
 const generateDays = () => {
-  const today = DateTime.now().setZone('America/Argentina/Buenos_Aires'); // Configurar la zona horaria
+  const today = DateTime.now().setZone('America/Argentina/Buenos_Aires');
   const days = [];
 
   for (let i = 0; i < 15; i++) {
-    const date = today.plus({ days: i }); // Incrementar días
-    const day = date.day;
-    const dayString = day < 10 ? `0${day}` : day.toString();
-    const dayName = date.setLocale('es').toFormat('ccc'); // Día abreviado en español
-    const monthName = date.setLocale('es').toFormat('LLL'); // Mes abreviado en español
+    const date = today.plus({ days: i });
+    const day = date.day < 10 ? `0${date.day}` : date.day.toString();
+
+    // Usar Intl.DateTimeFormat para la localización en español
+    const dayName = new Intl.DateTimeFormat('es-ES', { weekday: 'short' }).format(date.toJSDate());
+    const monthName = new Intl.DateTimeFormat('es-ES', { month: 'short' }).format(date.toJSDate());
 
     days.push({
-      day: dayString,
+      day,
       dayName,
       monthName,
-      dateString: date.toISODate(), // Fecha en formato ISO
+      dateString: date.toISODate(),
     });
   }
 

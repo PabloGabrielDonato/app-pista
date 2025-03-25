@@ -11,6 +11,7 @@ export const apiEndpoint = {
     },
     bookings:{
         create: `${BACKEND_URL}/api/bookings`,
+        get: `${BACKEND_URL}/api/bookings`,
     }
 }
 

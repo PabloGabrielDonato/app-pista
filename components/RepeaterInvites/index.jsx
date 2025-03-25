@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { View } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { Input, InputField } from '@/components/ui/input';
-import { Button, Colors } from 'react-native-ui-lib';
+import { Button } from 'react-native-ui-lib';
 import { AntDesign } from '@expo/vector-icons';
 import { Text } from '../ui/text';
 import { OutlinedButton } from '../ui/button';
@@ -21,15 +21,16 @@ const RepeaterInvites = ({ setInvites }) => {
         ...prevInvites,
         { name, lastName: last_name, dni },
       ]);
-      alert('invitado agregado')
+      alert('Invitado agregado');
     } else {
       alert('Por favor, completa todos los campos.');
     }
   };
 
   return (
-    <View>
-      <View>
+    <View style={styles.container}>
+      <Text style={styles.title}>Agregar Invitado</Text>
+      <View style={styles.inputContainer}>
         <Input variant="rounded">
           <InputField
             value={name}
@@ -38,7 +39,7 @@ const RepeaterInvites = ({ setInvites }) => {
           />
         </Input>
       </View>
-      <View>
+      <View style={styles.inputContainer}>
         <Input variant="rounded">
           <InputField
             value={last_name}
@@ -47,7 +48,7 @@ const RepeaterInvites = ({ setInvites }) => {
           />
         </Input>
       </View>
-      <View>
+      <View style={styles.inputContainer}>
         <Input variant="rounded">
           <InputField
             value={dni}
@@ -56,24 +57,49 @@ const RepeaterInvites = ({ setInvites }) => {
           />
         </Input>
       </View>
-      <OutlinedButton
-        onPress={handleOnSubmit}
-        style={{
-          borderColor: 'red',
-        }}
-      >
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-          }}
-        >
-          <AntDesign name="plus" size={24} color="black" style={{ marginRight: 8 }} />
-          <Text>Agregar Invitado</Text>
+      <OutlinedButton onPress={handleOnSubmit} style={styles.button}>
+        <View style={styles.buttonContent}>
+          <AntDesign name="plus" size={24} color="black" style={styles.icon} />
+          <Text style={styles.buttonText}>Agregar Invitado</Text>
         </View>
       </OutlinedButton>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    paddingTop: 50,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    backgroundColor: '#fff',
+  },
+  title: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    marginBottom: 15,
+  },
+  inputContainer: {
+    width: '100%',
+    marginBottom: 15,
+  },
+  button: {
+    borderColor: '#007AFF',
+    marginTop: 20,
+    width: '100%',
+  },
+  buttonContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  icon: {
+    marginRight: 8,
+  },
+  buttonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+});
 
 export default RepeaterInvites;

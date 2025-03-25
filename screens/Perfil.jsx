@@ -1,64 +1,63 @@
-import React from 'react';
-import { View, Text, TextInput, StyleSheet, ScrollView } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import Logo from '../components/Logo';
-import useUserStore from '../store/user.store';
-import { route } from '../configs/routes.config';
-import { Button, TextField } from 'react-native-ui-lib';
+import React from "react";
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import Logo from "../components/Logo";
+import useUserStore from "../store/user.store";
+import { route } from "../configs/routes.config";
+import { Button } from "react-native-ui-lib";
+import { MaterialIcons } from "@expo/vector-icons";
 
 const Perfil = () => {
   const navigation = useNavigation();
   const { logout, user } = useUserStore();
 
-const handleLogout = () => {  
-  logout().then(
-    () => navigation.navigate(route.login)
-  );
-};
-
+  const handleLogout = () => {
+    logout().then(() => navigation.navigate(route.login));
+  };
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.container}>
         <Logo />
-        {/* Formulario de perfil */}
-        <View style={styles.form}>
-          <View>
-            <Text style={styles.label}>Nombre</Text>
-            <TextField
-              placeholder="Nombre de usuario"
-              value={user?.name}
-              editable={false}
-            />
-          </View>
+        <Text style={styles.title}>{user?.name} {user?.last_name}</Text>
 
-          <View>
-            < Text style={styles.label}>Correo electrónico</Text>
-            <TextField
-              placeholder="Correo"
-              value={user?.email}
-              editable={false}
-            />
-          </View>
+        <View style={styles.card}>
+          <Text style={styles.sectionTitle}>Datos Personales</Text>
 
-          <View>
+          <TouchableOpacity style={styles.infoBox}>
             <Text style={styles.label}>DNI</Text>
-            <TextInput
-              placeholder="DNI"
-              value={user?.dni}
-              editable={false}
-            />
-          </View>
+            <Text style={styles.value}>{user?.dni}</Text>
+            <MaterialIcons name="edit" size={20} color="#4CBAF5" style={styles.icon} />
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.infoBox}>
+            <Text style={styles.label}>Edad</Text>
+            <Text style={styles.value}>{user?.birth_date}</Text>
+            <MaterialIcons name="edit" size={20} color="#4CBAF5" style={styles.icon} />
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.infoBox}>
+            <Text style={styles.label}>Domicilio</Text>
+            <Text style={styles.value}>{user?.address}</Text>
+            <MaterialIcons name="edit" size={20} color="#4CBAF5" style={styles.icon} />
+          </TouchableOpacity>
         </View>
 
-        {/* Botón de cerrar sesión */}
-        <Button 
-            onPress={handleLogout}
-            label="Logout"
-            outline
-            color="danger"
-        />
+        <View style={styles.card}>
+          <Text style={styles.sectionTitle}>Información de la cuenta</Text>
+          <TouchableOpacity style={styles.infoBox}>
+            <Text style={styles.value}>{user?.email}</Text>
+            <MaterialIcons name="edit" size={20} color="#4CBAF5" style={styles.icon} />
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.infoBox}>
+            <Text style={styles.label}>Celular</Text>
+            <Text style={styles.value}>{user?.phone}</Text>
+            <MaterialIcons name="edit" size={20} color="#4CBAF5" style={styles.icon} />
+          </TouchableOpacity>
+        </View>
       </View>
+      <Button onPress={handleLogout} label="Cerrar sesión" style={styles.logoutButton} />
     </ScrollView>
   );
 };
@@ -66,43 +65,63 @@ const handleLogout = () => {
 const styles = StyleSheet.create({
   scrollContainer: {
     flexGrow: 1,
-    justifyContent: 'center',
+    paddingBottom: 80,
   },
   container: {
     flex: 1,
-    backgroundColor: '#E9E9E9',
     padding: 20,
-    justifyContent: 'center',
   },
-  form: {
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#4CBAF5",
     marginBottom: 20,
+  },
+  card: {
+    backgroundColor: "#FFFFFF",
+    padding: 20,
+    borderRadius: 10,
+    marginBottom: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  infoBox: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    borderWidth: 2,
+    borderColor: "#4CBAF5",
+    padding: 15,
+    borderRadius: 8,
+    marginBottom: 10,
   },
   label: {
     fontSize: 16,
-    color: '#4A4A4A',
-    marginBottom: 8,
+    fontWeight: "bold",
+    color: "#4CBAF5",
   },
-  input: {
-    backgroundColor: '#FFFFFF',
-    padding: 10,
-    borderColor: '#3BA0C6',
-    borderWidth: 2,
-    borderRadius: 10,
-    height: 60,
-    marginBottom: 20,
+  value: {
     fontSize: 16,
-    color: '#4A4A4A',
+    color: "#4CBAF5",
+  },
+  icon: {
+    marginLeft: 10,
   },
   logoutButton: {
-    backgroundColor: '#FF3B30',
+    backgroundColor: "#4CBAF5",
     paddingVertical: 15,
     borderRadius: 8,
-    alignItems: 'center',
-  },
-  logoutText: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: 'bold',
+    alignItems: "center",
+    alignSelf: "center",
+    marginBottom: 20,
   },
 });
 

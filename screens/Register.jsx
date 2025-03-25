@@ -41,10 +41,10 @@ export default function Register({ navigation }) {
      await register({
       name: form.name,
       last_name: form.last_name,
-      //dni: form.dni,
-      //address: form.address,
-      //phone: form.phone,
-      //birth_date: form.birth_date,
+      dni: form.dni,
+      address: form.address,
+      phone: form.phone,
+      birth_date: form.birth_date,
       email: form.email,
       password: form.password,
       password_confirmation: form.password_confirmation

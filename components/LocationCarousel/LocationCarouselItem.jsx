@@ -37,7 +37,7 @@ const LocationCarouselItem = ({ location, setSelectedLocation }) => {
         </Text>
       </View>
       <View style={styles.locationContainer}>
-        <Ionicons name="location-outline" size={16} color="#A0A0A0" />
+        <Ionicons name="location-outline" size={20} color="#A0A0A0" />
         <Text style={styles.place}>
           {location.address || 'Ubicación no especificada'}
         </Text>
