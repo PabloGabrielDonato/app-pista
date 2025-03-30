@@ -79,7 +79,6 @@ export default function Home() {
     },
 
     columnContainer: {
-
       flexDirection: 'row',
       alignItems: 'space-around',
       justifyContent: 'space-around',

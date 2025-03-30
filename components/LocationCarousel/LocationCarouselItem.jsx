@@ -49,6 +49,7 @@ const LocationCarouselItem = ({ location, setSelectedLocation }) => {
 
 const styles = StyleSheet.create({
   imageContainer: {
+    padding: 10,
     borderRadius: 10,
     borderWidth: 3,
     backgroundColor: '#fff',

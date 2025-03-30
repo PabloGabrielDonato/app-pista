@@ -5,11 +5,13 @@ import { Button } from 'react-native-ui-lib';
 import { AntDesign } from '@expo/vector-icons';
 import { Text } from '../ui/text';
 import { OutlinedButton } from '../ui/button';
+import { useToast } from '../ToastProvider';
 
 const RepeaterInvites = ({ setInvites }) => {
   const [name, setName] = useState('');
   const [last_name, setLastName] = useState('');
   const [dni, setDni] = useState('');
+  const {showToast} = useToast()
 
   const handleOnSubmit = () => {
     if (name && last_name && dni) {
@@ -21,9 +23,9 @@ const RepeaterInvites = ({ setInvites }) => {
         ...prevInvites,
         { name, lastName: last_name, dni },
       ]);
-      alert('Invitado agregado');
+      showToast('Invitado agregado')
     } else {
-      alert('Por favor, completa todos los campos.');
+      showToast('Por favor, completa todos los campos')
     }
   };
 
