@@ -5,6 +5,8 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import "react-native-gesture-handler";
 import "./themes/ligth";
+import { GluestackUIProvider } from "@gluestack-ui/themed";
+import { config } from "@gluestack-ui/config";
 
 // Componentes
 import Login from "./screens/Login";
@@ -43,43 +45,42 @@ export default function App() {
     };
   }, []);
 
-  if (isSplashVisible) {
-    return null; // Opcional: puedes mostrar un componente o animación personalizada aquí
-  }
+  if (isSplashVisible) return null;
 
-  console.log(token);
   return (
-    <NavigationContainer>
-      <ToastProvider>
-        {token !== null ? (
-          <Stack.Navigator initialRouteName={route.home}>
-            <Stack.Screen
-              name={route.tab_main}
-              component={Navbar}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name={route.bookingForm}
-              component={BookingForm}
-              options={{ headerShown: false }}
-            />
-          </Stack.Navigator>
-        ) : (
-          <Stack.Navigator initialRouteName={route.login}>
-            <Stack.Screen
-              name={route.login}
-              component={Login}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name={route.register}
-              component={Register}
-              options={{ headerShown: false }}
-            />
-          </Stack.Navigator>
-        )}
-      </ToastProvider>
-    </NavigationContainer>
+    <GluestackUIProvider config={config}>
+      <NavigationContainer>
+        <ToastProvider>
+          {token !== null ? (
+            <Stack.Navigator initialRouteName={route.home}>
+              <Stack.Screen
+                name={route.tab_main}
+                component={Navbar}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name={route.bookingForm}
+                component={BookingForm}
+                options={{ headerShown: false }}
+              />
+            </Stack.Navigator>
+          ) : (
+            <Stack.Navigator initialRouteName={route.login}>
+              <Stack.Screen
+                name={route.login}
+                component={Login}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name={route.register}
+                component={Register}
+                options={{ headerShown: false }}
+              />
+            </Stack.Navigator>
+          )}
+        </ToastProvider>
+      </NavigationContainer>
+    </GluestackUIProvider>
   );
 }
 

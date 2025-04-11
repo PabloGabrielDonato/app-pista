@@ -4,6 +4,7 @@ import Logo from '../components/Logo';
 import useUserStore from '../store/user.store.js';
 import { route } from '../configs/routes.config.js';
 import { Button, TextField } from 'react-native-ui-lib';
+import { Alert as GSAlert, AlertText, AlertIcon } from "@gluestack-ui/themed";
 
 export default function Login({ navigation }) {
   
@@ -37,6 +38,11 @@ export default function Login({ navigation }) {
   return (
     <View style={styles.container}>
       <Logo />
+
+      <GSAlert action="info" variant="solid" my="$4" width={320}>
+        <AlertIcon mr="$2" />
+        <AlertText>Este es un componente de Gluestack UI 🎉</AlertText>
+      </GSAlert>
 
       <Text style={styles.registerText}>
         ¿No tenés cuenta todavía? 
