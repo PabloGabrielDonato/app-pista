@@ -4,7 +4,7 @@ import Logo from '../components/Logo';
 import useUserStore from '../store/user.store.js';
 import { route } from '../configs/routes.config.js';
 import { Button, TextField } from 'react-native-ui-lib';
-import { Alert as GSAlert, AlertText, AlertIcon } from "@gluestack-ui/themed";
+import { Input, InputField } from "@/components/ui/input"
 
 export default function Login({ navigation }) {
   
@@ -39,35 +39,45 @@ export default function Login({ navigation }) {
     <View style={styles.container}>
       <Logo />
 
-      <GSAlert action="info" variant="solid" my="$4" width={320}>
-        <AlertIcon mr="$2" />
-        <AlertText>Este es un componente de Gluestack UI 🎉</AlertText>
-      </GSAlert>
-
       <Text style={styles.registerText}>
         ¿No tenés cuenta todavía? 
-        <Pressable onPress={goToRegister}>
+        <Pressable onPress={goToRegister} className='flex'>
           <Text style={styles.registerLink}> Registrate.</Text>
         </Pressable>
       </Text>
 
       <View style={styles.inputContainer}>
-        <TextField 
-          placeholder="Email"
-          value={email}
-          onKeyPress={handleKeyPress} // Detecta tecla Enter
-          onChangeText={setEmail} // Actualiza el valor del email
-        />
+        <Input
+          variant="outline"
+          size="md"
+          isDisabled={false}
+          isInvalid={false}
+          isReadOnly={false}
+        >
+          <InputField 
+            placeholder="Email"
+            value={email}
+            onKeyPress={handleKeyPress} // Detecta tecla Enter
+            onChangeText={setEmail} // Actualiza el valor del email
+          />
+        </Input>
       </View>
 
       <View style={styles.inputContainer}>
-        <TextField 
-          placeholder="Contraseña"
-          secureTextEntry
-          value={password}
-          onKeyPress={handleKeyPress} // Detecta tecla Enter
-          onChangeText={setPassword} // Actualiza el valor de la contraseña
-        />
+        <Input
+          variant="outline"
+          size="sm"
+          isDisabled={false}
+          isInvalid={false}
+          isReadOnly={false}
+        >
+          <InputField 
+            placeholder="Contraseña"
+            value={password}
+            onKeyPress={handleKeyPress} // Detecta tecla Enter
+            onChangeText={setPassword} // Actualiza el valor de la contraseña
+          />
+        </Input>
       </View>
 
       <View style={styles.bottomContainer}>

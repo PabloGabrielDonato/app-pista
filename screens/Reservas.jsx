@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native
 import { useNavigation } from '@react-navigation/native';
 import useUserStore from '../store/user.store';
 import { apiEndpoint } from '../configs/routes.config';
+import { Ionicons } from '@expo/vector-icons';
 
 const MisReservas = () => {
   const [activeTab, setActiveTab] = useState('Activas'); // Pestaña activa
@@ -21,12 +22,7 @@ const MisReservas = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-  
-      console.log('Response Status:', response.status);
-      console.log('Response Headers:', response.headers);
-  
       const data = await response.json();
-      console.log('Response Data:', data);
   
       if (response.ok) {
         setBookings(data || []);
@@ -140,8 +136,8 @@ const MisReservas = () => {
       ) : (
         <View style={styles.noReservations}>
           <Text style={styles.message}>No tienes reservas en esta categoría.</Text>
-          <TouchableOpacity style={styles.addButton} onPress={goToHome}>
-            <Text style={styles.plusIcon}>+</Text>
+          <TouchableOpacity style={styles.circularButton} onPress={goToHome}>
+            <Ionicons name="add" size={32} color="#fff" />
           </TouchableOpacity>
         </View>
       )}
@@ -238,6 +234,19 @@ const styles = StyleSheet.create({
   plusIcon: {
     fontSize: 36,
     color: '#3BA0C6',
+  },
+  circularButton: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: '#3BA0C6',
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 4,
   },
 });
 

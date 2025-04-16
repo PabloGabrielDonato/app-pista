@@ -28,7 +28,7 @@ export default function Home() {
         selectedHour,
       })
     }else {
-      alert('Debe seleccionar Locacion, Fecha y Hora')
+      alert('Debe seleccionar una ubicación, fecha y hora')
     }
   }
 
