@@ -66,10 +66,16 @@ const styles = StyleSheet.create({
   scrollContainer: {
     flexGrow: 1,
     paddingBottom: 80,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%'
   },
   container: {
     flex: 1,
     padding: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '90%'
   },
   title: {
     fontSize: 24,
@@ -87,6 +93,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 4,
+    width: '100%'
   },
   sectionTitle: {
     fontSize: 18,
