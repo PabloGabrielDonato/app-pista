@@ -1,10 +1,13 @@
-// components/Navbar.js
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'; 
-import { Ionicons } from '@expo/vector-icons'; // Asegúrate de tener instalada esta dependencia
+import { Ionicons } from '@expo/vector-icons';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+} from 'react-native-reanimated';
 import { route as routePath } from '../configs/routes.config';
 
-// Componentes
 import Reservas from '../screens/Reservas'; 
 import Perfil from '../screens/Perfil'; 
 import Home from '../screens/Home';
@@ -17,21 +20,20 @@ export default function Navbar() {
       screenOptions={({ route }) => ({
         tabBarStyle: {
           position: 'absolute',
-          bottom: 10, // Deja un espacio en la parte inferior
-          left: 10,   // Margen izquierdo
-          right: 10,  // Margen derecho
-          height: 70, // Ajusta la altura de la barra
+          bottom: 10,
+          left: 10,
+          right: 10,
+          height: 70,
           backgroundColor: 'white',
-          borderRadius: 20,  // Borde redondeado
-          elevation: 10,   // Sombra en Android
-          shadowColor: '#000',  // Sombra en iOS
-          shadowOffset: { width: 0, height: 10 },  // Desplazamiento de la sombra
-          shadowOpacity: 0.25,  // Opacidad de la sombra
-          shadowRadius: 5,     // Radio de la sombra
+          borderRadius: 20,
+          elevation: 10,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 10 },
+          shadowOpacity: 0.25,
+          shadowRadius: 5,
         },
-        tabBarIcon: ({ color, size }) => {
+        tabBarIcon: ({ color, size, focused }) => {
           let iconName;
-            
           switch (route.name) {
             case routePath.home:
               iconName = 'home-outline';
@@ -44,25 +46,46 @@ export default function Navbar() {
               break;
             default:
               iconName = 'home-outline';
-              break;
           }
 
+          // Valores animados
+          const scale = useSharedValue(focused ? 1.2 : 1);
+          const translateY = useSharedValue(focused ? -6 : 0);
+
+          // Update animation cuando cambia el foco
+          scale.value = withSpring(focused ? 1.2 : 1, {
+            damping: 5,
+            stiffness: 150,
+            mass: 0.8,
+          });
+
+          translateY.value = withSpring(focused ? -6 : 0, {
+            damping: 6,
+            stiffness: 120,
+            mass: 0.8,
+          });
+
+          const animatedStyle = useAnimatedStyle(() => ({
+            transform: [
+              { scale: scale.value },
+              { translateY: translateY.value },
+            ],
+          }));
+
           return (
-            <Ionicons 
-              name={iconName} 
-              size={size} 
-              color={color} 
-            />
+            <Animated.View style={animatedStyle}>
+              <Ionicons name={iconName} size={size} color={color} />
+            </Animated.View>
           );
         },
-        tabBarLabel: () => null,  // Elimina el texto
+        tabBarLabel: () => null,
         tabBarActiveTintColor: '#3BA0C6',
         tabBarInactiveTintColor: 'gray',
       })}
     >
-      <Tab.Screen name="Home" component={Home} />
-      <Tab.Screen name="Reservas" component={Reservas} />
-      <Tab.Screen name="Perfil" component={Perfil} />
+      <Tab.Screen name={routePath.home} component={Home} />
+      <Tab.Screen name={routePath.reservas} component={Reservas} />
+      <Tab.Screen name={routePath.perfil} component={Perfil} />
     </Tab.Navigator>
   );
 }
